@@ -1,40 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}Yatrik{% endblock %}</title>
+    <!-- Google Search Console Verification -->
+    <meta
+        name="google-site-verification"
+        content="cJWpO7ArrScS2sm-aIfj1vRL_FmMa5JQifHZxLUI75k"
+    >
+
+    <!-- SEO Description -->
+    <meta
+        name="description"
+        content="Yatrik is an AI-powered pilgrimage platform to discover temples, darshan timings and sacred places across Braj and Vrindavan."
+    >
+
+    <!-- SEO Keywords -->
+    <meta
+        name="keywords"
+        content="Vrindavan temples, Braj temples, Prem Mandir, Banke Bihari Temple, ISKCON Vrindavan, Radha Raman Temple, Nidhivan, Yatrik"
+    >
+
+    <meta name="author" content="Yatrik">
+
+    <title>{% block title %}Yatrik - Discover the Divine Heart of Braj{% endblock %}</title>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
     <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    {% block head %}
+    {% endblock %}
+
 </head>
 
 <body>
 
+    <!-- Navbar -->
     {% include 'components/navbar.html' %}
 
+    <!-- Main Content -->
     <main>
+
         {% block content %}
         {% endblock %}
+
     </main>
 
+    <!-- Footer -->
     {% include 'components/footer.html' %}
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+    </script>
 
     <!-- Custom JS -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='js/main.js') }}">
+    </script>
+
+    {% block scripts %}
+    {% endblock %}
 
 </body>
+
 </html>
