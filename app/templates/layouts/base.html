@@ -27,7 +27,11 @@
 
     <meta name="author" content="Yatrik">
 
-    <title>{% block title %}Yatrik - Discover the Divine Heart of Braj{% endblock %}</title>
+    <title>
+        {% block title %}
+        Yatrik - Discover the Divine Heart of Braj
+        {% endblock %}
+    </title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,10 +59,12 @@
 
 </head>
 
+
 <body>
 
     <!-- Navbar -->
     {% include 'components/navbar.html' %}
+
 
     <!-- Main Content -->
     <main>
@@ -68,18 +74,22 @@
 
     </main>
 
+
     <!-- Footer -->
     {% include 'components/footer.html' %}
+
 
     <!-- Bootstrap JS -->
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
     </script>
 
+
     <!-- Custom JS -->
     <script
         src="{{ url_for('static', filename='js/main.js') }}">
     </script>
+
 
     {% block scripts %}
     {% endblock %}
