@@ -1,0 +1,185 @@
+{% extends "layouts/base.html" %}
+
+
+{% block title %}
+{{ temple.name }} | Yatrik
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="container py-5">
+
+
+    <div class="row align-items-center">
+
+
+        <!-- Image -->
+        <div class="col-lg-6 mb-4">
+
+            <img src="{{ url_for('static', filename='images/' + temple.image) }}"
+                 class="img-fluid rounded shadow"
+                 alt="{{ temple.name }}">
+
+        </div>
+
+
+
+        <!-- Details -->
+        <div class="col-lg-6">
+
+
+            <h1 class="fw-bold">
+                🛕 {{ temple.name }}
+            </h1>
+
+
+            <hr>
+
+
+            <p>
+                📍 <strong>Location:</strong>
+                {{ temple.city }}
+            </p>
+
+
+
+            <!-- Temple Status -->
+
+            <div class="mt-3">
+
+                {% if status.status == "Open Now" %}
+
+                    <span class="badge bg-success fs-6 p-2">
+                        🟢 Open Now
+                    </span>
+
+                {% elif status.status == "Darshan Break" %}
+
+                    <span class="badge bg-warning text-dark fs-6 p-2">
+                        🟡 Darshan Break
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-danger fs-6 p-2">
+                        🔴 Closed
+                    </span>
+
+                {% endif %}
+
+
+                <p class="mt-2 text-muted">
+                    {{ status.message }}
+                </p>
+
+            </div>
+
+
+
+
+            <!-- Darshan Timing -->
+
+            <div class="mt-3">
+
+                <h5 class="fw-bold">
+                    🕒 Darshan Timings
+                </h5>
+
+
+                <p>
+                    🌅 <strong>Morning Darshan:</strong>
+                    {{ temple.morning_open }}
+                    -
+                    {{ temple.morning_close }}
+                </p>
+
+
+                <p>
+                    🌆 <strong>Evening Darshan:</strong>
+                    {{ temple.evening_open }}
+                    -
+                    {{ temple.evening_close }}
+                </p>
+
+            </div>
+
+
+
+
+            <h3 class="mt-4">
+                About Temple
+            </h3>
+
+
+
+            <p>
+                {{ temple.description }}
+            </p>
+
+
+
+
+            <a href="https://www.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}"
+               target="_blank"
+               class="btn btn-success">
+
+                📍 Get Directions
+
+            </a>
+
+
+            <a href="/" class="btn btn-warning">
+
+                ← Back to Home
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <!-- Map Section -->
+
+    <div class="mt-5">
+
+
+        <h2 class="fw-bold text-center mb-4">
+            🗺️ Temple Location
+        </h2>
+
+
+
+        <div class="ratio ratio-21x9 shadow rounded">
+
+
+            <iframe
+
+            src="https://maps.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}&z=15&output=embed"
+
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy">
+
+            </iframe>
+
+
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+{% endblock %}

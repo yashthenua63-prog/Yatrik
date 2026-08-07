@@ -1,0 +1,53 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Prem Mandir | BrajGuide{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <img src="{{ url_for('static', filename='images/prem-mandir.jpg') }}"
+                 class="img-fluid rounded shadow"
+                 alt="Prem Mandir">
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <h1 class="fw-bold">🛕 Prem Mandir</h1>
+
+            <hr>
+
+            <p><strong>📍 Location:</strong> Vrindavan, Uttar Pradesh</p>
+
+            <p><strong>🕒 Timings:</strong> 5:30 AM – 8:30 PM</p>
+
+            <p><strong>🎟 Entry Fee:</strong> Free</p>
+
+            <p><strong>🚗 Parking:</strong> Available</p>
+
+            <p><strong>👕 Dress Code:</strong> Traditional / Decent</p>
+
+            <h3 class="mt-4">About Temple</h3>
+
+            <p>
+                Prem Mandir is one of the most beautiful temples in
+                Vrindavan. It is famous for its white marble architecture,
+                musical fountain, evening lighting and peaceful atmosphere.
+            </p>
+
+            <a href="/" class="btn btn-warning">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
