@@ -1,352 +1,309 @@
 {% extends "layouts/base.html" %}
 
-
 {% block title %}
-{{ temple.name }} | Yatrik
+{{ temple.name }} Vrindavan – Darshan, Timings & Guide | Yatrik
 {% endblock %}
 
+{% block meta_description %}
+Explore {{ temple.name }} in Vrindavan with Yatrik. Check darshan timings, current darshan status, temple information, location and nearby temples.
+{% endblock %}
+
+{% block canonical_url %}
+https://yatrik-rw1u.onrender.com/temples/{{ temple.id }}
+{% endblock %}
+
+{% block og_title %}
+{{ temple.name }} Vrindavan – Darshan, Timings & Guide | Yatrik
+{% endblock %}
+
+{% block og_description %}
+Explore {{ temple.name }} in Vrindavan with Yatrik. Check darshan timings, temple information, location and nearby temples.
+{% endblock %}
+
+{% block og_url %}
+https://yatrik-rw1u.onrender.com/temples/{{ temple.id }}
+{% endblock %}
 
 
 {% block content %}
 
-
 <div class="container py-5">
 
+    <!-- Temple Image -->
+    <div class="mb-4">
+        <img
+            src="{{ url_for('static', filename='images/' + temple.image) }}"
+            class="img-fluid rounded shadow"
+            style="height:450px;width:100%;object-fit:cover;"
+            alt="{{ temple.name }} Vrindavan"
+        >
+    </div>
 
-<!-- Hero Section -->
 
-<div class="row align-items-center mb-5">
+    <!-- Temple Name -->
+    <h1 class="display-4 fw-bold">
+        🛕 {{ temple.name }}
+    </h1>
 
 
-<div class="col-lg-6 mb-4">
+    <!-- Location -->
+    <p class="lead">
+        📍 {{ temple.city }}
+    </p>
 
 
-<img src="{{ url_for('static', filename='images/' + temple.image) }}"
-class="img-fluid rounded shadow"
-style="height:450px;width:100%;object-fit:cover;"
-alt="{{ temple.name }}">
+    <!-- Current Darshan Status -->
+    <section class="mt-4">
 
+        {% if status.status == "Open Now" %}
+
+            <div class="alert alert-success">
+                🟢 <strong>{{ status.status }}</strong>
+                <br>
+                {{ status.message }}
+            </div>
+
+        {% elif status.status == "Darshan Break" %}
+
+            <div class="alert alert-warning">
+                🟡 <strong>{{ status.status }}</strong>
+                <br>
+                {{ status.message }}
+            </div>
+
+        {% else %}
+
+            <div class="alert alert-danger">
+                🔴 <strong>{{ status.status }}</strong>
+                <br>
+                {{ status.message }}
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- Darshan Timings -->
+    <section class="mt-5">
+
+        <h2>{{ temple.name }} Darshan Timings</h2>
+
+        <div class="row g-4 mt-2">
+
+            <!-- Morning Darshan -->
+            <div class="col-md-6">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h3 class="h5">
+                            🌅 Morning Darshan
+                        </h3>
+
+                        <p class="fs-5 mb-0">
+                            {{ temple.morning_open }}
+                            -
+                            {{ temple.morning_close }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Evening Darshan -->
+            <div class="col-md-6">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+
+                        <h3 class="h5">
+                            🌆 Evening Darshan
+                        </h3>
+
+                        <p class="fs-5 mb-0">
+                            {{ temple.evening_open }}
+                            -
+                            {{ temple.evening_close }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Directions -->
+    <section class="mt-4">
+
+        <a
+            href="https://www.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-success mt-3"
+        >
+            📍 Get Directions
+        </a>
+
+    </section>
+
+
+    <!-- About Temple -->
+    <section class="mt-5">
+
+        <h2>About {{ temple.name }}</h2>
+
+        <p>
+            {{ temple.description }}
+        </p>
+
+    </section>
+
+
+    <!-- Nearby Temples -->
+    <section class="mt-5">
+
+        <h2>🛕 Nearby Temples</h2>
+
+        <div
+            class="row g-4"
+            id="nearby-container"
+        >
+        </div>
+
+    </section>
+
+
+    <!-- Temple Location -->
+    <section class="mt-5">
+
+        <h2>🗺️ {{ temple.name }} Temple Location</h2>
+
+        <p>
+            Find {{ temple.name }} in {{ temple.city }} using the map below.
+        </p>
+
+        <div class="ratio ratio-16x9">
+
+            <iframe
+                src="https://maps.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}&z=16&output=embed"
+                style="border:0;"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+
+        </div>
+
+    </section>
+
+
+    <!-- SEO Content -->
+    <section class="mt-5 mb-5">
+
+        <h2>Visit {{ temple.name }} in Vrindavan</h2>
+
+        <p>
+            Planning a visit to {{ temple.name }} in Vrindavan?
+            Yatrik provides useful information about Vrindavan temples,
+            darshan timings, current darshan status, temple locations
+            and nearby sacred places.
+        </p>
+
+        <p>
+            Explore more
+            <a href="/temples">
+                Vrindavan temples
+            </a>
+            and discover important pilgrimage destinations across
+            Vrindavan and Braj.
+        </p>
+
+    </section>
 
 </div>
 
 
-
-
-<div class="col-lg-6">
-
-
-<h1 class="fw-bold display-5">
-🛕 {{ temple.name }}
-</h1>
-
-
-<p class="text-muted fs-5">
-📍 {{ temple.city }}
-</p>
-
-
-
-<!-- Status -->
-
-{% if status.status == "Open Now" %}
-
-<div class="alert alert-success">
-🟢 <strong>{{ status.status }}</strong>
-<br>
-{{ status.message }}
-</div>
-
-
-{% elif status.status == "Darshan Break" %}
-
-<div class="alert alert-warning">
-🟡 <strong>{{ status.status }}</strong>
-<br>
-{{ status.message }}
-</div>
-
-
-{% else %}
-
-<div class="alert alert-danger">
-🔴 <strong>{{ status.status }}</strong>
-<br>
-{{ status.message }}
-</div>
-
-
-{% endif %}
-
-
-
-
-
-<!-- Timing Cards -->
-
-
-<div class="row mt-4">
-
-
-<div class="col-md-6 mb-3">
-
-
-<div class="card shadow border-0">
-
-<div class="card-body text-center">
-
-
-<h5>
-🌅 Morning Darshan
-</h5>
-
-
-<p class="mb-0">
-{{ temple.morning_open }}
--
-{{ temple.morning_close }}
-</p>
-
-
-</div>
-
-</div>
-
-
-</div>
-
-
-
-
-<div class="col-md-6 mb-3">
-
-
-<div class="card shadow border-0">
-
-<div class="card-body text-center">
-
-
-<h5>
-🌆 Evening Darshan
-</h5>
-
-
-<p class="mb-0">
-{{ temple.evening_open }}
--
-{{ temple.evening_close }}
-</p>
-
-
-</div>
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-
-<a href="https://www.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}"
-target="_blank"
-class="btn btn-success mt-3">
-
-📍 Get Directions
-
-</a>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<!-- About Temple -->
-
-
-<div class="card shadow border-0 mb-5">
-
-
-<div class="card-body p-4">
-
-
-<h2 class="fw-bold">
-About {{ temple.name }}
-</h2>
-
-
-<p class="text-muted fs-5">
-
-{{ temple.description }}
-
-</p>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-<!-- Nearby Temples -->
-
-
-<div class="mb-5">
-
-
-<h2 class="fw-bold text-center mb-4">
-🛕 Nearby Temples
-</h2>
-
-
-
-<div class="row g-4"
-id="nearby-container">
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-<!-- Map -->
-
-<div>
-
-
-<h2 class="fw-bold text-center mb-4">
-🗺️ Temple Location
-</h2>
-
-
-
-<div class="ratio ratio-21x9 shadow rounded">
-
-
-<iframe
-
-src="https://maps.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}&z=16&output=embed"
-
-style="border:0;"
-loading="lazy">
-
-</iframe>
-
-
-</div>
-
-
-</div>
-
-
-
-
-</div>
-
-
-
-
-
-
+<!-- Nearby Temples JavaScript -->
 <script>
-
 
 fetch("/api/temples/{{ temple.id }}/nearby")
 
+    .then(response => response.json())
 
-.then(response => response.json())
+    .then(temples => {
 
-
-.then(temples => {
-
-
-const container =
-document.getElementById("nearby-container");
+        const container =
+            document.getElementById("nearby-container");
 
 
+        temples.forEach(temple => {
 
-temples.forEach(temple => {
+            container.innerHTML += `
 
+                <div class="col-md-4">
 
+                    <div class="card shadow border-0 h-100">
 
-container.innerHTML += `
-
-
-<div class="col-md-4">
-
-
-<div class="card shadow border-0 h-100">
-
-
-<img src="/static/images/${temple.image}"
-
-class="card-img-top"
-
-style="height:200px;object-fit:cover;">
+                        <img
+                            src="/static/images/${temple.image}"
+                            class="card-img-top"
+                            style="height:200px;object-fit:cover;"
+                            alt="${temple.name} Vrindavan"
+                        >
 
 
+                        <div class="card-body">
 
-<div class="card-body">
-
-
-<h5>
-🛕 ${temple.name}
-</h5>
+                            <h3 class="h5">
+                                🛕 ${temple.name}
+                            </h3>
 
 
-<p>
-📍 ${temple.distance} km away
-</p>
+                            <p>
+                                📍 ${temple.distance} km away
+                            </p>
 
 
-<a href="/temples/${temple.id}"
+                            <a
+                                href="/temples/${temple.id}"
+                                class="btn btn-warning w-100"
+                            >
+                                View Details
+                            </a>
 
-class="btn btn-warning w-100">
+                        </div>
 
-View Details
+                    </div>
 
-</a>
+                </div>
 
+            `;
 
+        });
 
-</div>
+    })
 
+    .catch(error => {
 
-</div>
+        console.error(
+            "Error loading nearby temples:",
+            error
+        );
 
-
-</div>
-
-
-`;
-
-
-
-});
-
-
-});
-
+    });
 
 </script>
-
 
 
 {% endblock %}

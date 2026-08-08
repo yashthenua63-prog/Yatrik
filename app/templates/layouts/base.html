@@ -16,7 +16,7 @@
     <!-- SEO Description -->
     <meta
         name="description"
-        content="Yatrik is an AI-powered pilgrimage platform to discover temples, darshan timings and sacred places across Braj and Vrindavan."
+        content="{% block meta_description %}Yatrik is an AI-powered pilgrimage platform to discover temples, darshan timings and sacred places across Braj and Vrindavan.{% endblock %}"
     >
 
     <!-- SEO Keywords -->
@@ -25,7 +25,6 @@
         content="Yatrik Vrindavan, Vrindavan temples, Braj temples, Prem Mandir, Banke Bihari Temple, ISKCON Vrindavan, Radha Raman Temple, Nidhivan"
     >
 
-    <!-- Author -->
     <meta name="author" content="Yatrik">
 
     <!-- Page Title -->
@@ -38,23 +37,23 @@
     <!-- Canonical URL -->
     <link
         rel="canonical"
-        href="https://yatrik-rw1u.onrender.com/"
+        href="{% block canonical_url %}https://yatrik-rw1u.onrender.com/{% endblock %}"
     >
 
-    <!-- Open Graph / Social Sharing -->
+    <!-- Open Graph -->
     <meta
         property="og:title"
-        content="Yatrik Vrindavan – Temple Guide, Darshan & Timings"
+        content="{% block og_title %}Yatrik Vrindavan – Temple Guide, Darshan & Timings{% endblock %}"
     >
 
     <meta
         property="og:description"
-        content="Explore Vrindavan temples, darshan timings and pilgrimage information with Yatrik."
+        content="{% block og_description %}Explore Vrindavan temples, darshan timings and pilgrimage information with Yatrik.{% endblock %}"
     >
 
     <meta
         property="og:url"
-        content="https://yatrik-rw1u.onrender.com/"
+        content="{% block og_url %}https://yatrik-rw1u.onrender.com/{% endblock %}"
     >
 
     <meta
