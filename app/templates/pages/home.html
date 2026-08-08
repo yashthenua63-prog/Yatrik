@@ -1,314 +1,230 @@
 {% extends "layouts/base.html" %}
 
 {% block title %}
-Yatrik | Home
+Yatrik Vrindavan – Temple Guide, Darshan & Timings
 {% endblock %}
-
 
 {% block content %}
 
+<div class="container">
 
-<!-- Hero Section -->
+    <!-- Main Heading -->
+    <h1 class="display-3 fw-bold">
+        Yatrik – Your Vrindavan Temple Guide
+    </h1>
 
-<section class="hero">
-
-    <div class="container">
-
-        <h1 class="display-3 fw-bold">
-            Discover the Divine Heart of Braj
-        </h1>
-
-
-        <p class="lead mt-3">
-            AI Powered Pilgrimage Platform
-        </p>
+    <p class="lead mt-3">
+        AI Powered Pilgrimage Platform
+    </p>
 
 
+    <!-- Search Box -->
+    <div class="search-box mt-5">
 
-        <div class="search-box mt-5">
+        <input
+            id="searchInput"
+            class="form-control form-control-lg"
+            type="text"
+            placeholder="Search Vrindavan temples..."
+            aria-label="Search Vrindavan temples"
+        >
 
-            <input
-                id="searchInput"
-                class="form-control form-control-lg"
-                type="text"
-                placeholder="Search Temples...">
-
-
-            <div id="search-results" class="mt-3"></div>
-
-
-        </div>
-
+        <div id="search-results" class="mt-3"></div>
 
     </div>
 
-</section>
+
+    <!-- Temple Cards -->
+    <div class="row mt-5" id="temple-container">
+    </div>
 
 
+    <!-- SEO Content -->
+    <section class="mt-5 mb-5">
 
+        <h2>Explore Vrindavan with Yatrik</h2>
 
+        <p>
+            Yatrik is a pilgrimage platform designed to help visitors
+            explore the spiritual heart of Vrindavan and Braj. Discover
+            famous temples, check darshan timings and find important
+            sacred places in and around Vrindavan.
+        </p>
 
-<!-- Popular Temples -->
+        <p>
+            Explore popular destinations including
+            <strong>Prem Mandir</strong>,
+            <strong>Banke Bihari Temple</strong>,
+            <strong>ISKCON Vrindavan</strong>,
+            <strong>Radha Raman Temple</strong> and
+            <strong>Nidhivan</strong>.
+        </p>
 
-<section class="py-5">
-
-<div class="container">
-
-
-<div class="text-center mb-5">
-
-<h2 class="fw-bold">
-Popular Temples
-</h2>
-
-
-<p class="text-muted">
-Explore the most visited temples in Braj.
-</p>
-
-
-</div>
-
-
-
-
-<div class="row g-4" id="temple-container">
+    </section>
 
 </div>
-
-
-
-</div>
-
-</section>
-
-
-
-
 
 
 <script>
 
-
 const container = document.getElementById("temple-container");
-
 const searchInput = document.getElementById("searchInput");
-
 const resultBox = document.getElementById("search-results");
 
 
+// Load Temples
+function loadTemples(url="/api/temples") {
 
+    fetch(url)
 
+        .then(response => response.json())
 
-function loadTemples(url="/api/temples"){
+        .then(temples => {
 
+            container.innerHTML = "";
 
-fetch(url)
+            temples.forEach(temple => {
 
-.then(response => response.json())
+                container.innerHTML += `
 
+                    <div class="col-md-4 mb-4">
 
-.then(temples => {
+                        <div class="card h-100 shadow-sm">
 
+                            <img
+                                src="/static/images/${temple.image}"
+                                class="card-img-top"
+                                style="height:250px;object-fit:cover;"
+                                alt="${temple.name} Vrindavan"
+                            >
 
-container.innerHTML = "";
+                            <div class="card-body">
 
+                                <h3 class="card-title">
+                                    ${temple.name}
+                                </h3>
 
-temples.forEach(temple => {
+                                <p class="card-text">
+                                    📍 ${temple.city}
+                                </p>
 
+                                <a
+                                    href="/temples/${temple.id}"
+                                    class="btn btn-warning w-100"
+                                >
+                                    View Details
+                                </a>
 
+                            </div>
 
-container.innerHTML += `
+                        </div>
 
+                    </div>
 
-<div class="col-md-6 col-lg-3">
+                `;
 
+            });
 
-<div class="card h-100 shadow border-0">
+        })
 
+        .catch(error => {
 
+            console.error("Error loading temples:", error);
 
-<img src="/static/images/${temple.image}"
-
-class="card-img-top"
-
-style="height:250px;object-fit:cover;">
-
-
-
-<div class="card-body">
-
-
-
-<h4>
-${temple.name}
-</h4>
-
-
-
-<p class="text-muted">
-${temple.description}
-</p>
-
-
-
-<p>
-📍 ${temple.city}
-</p>
-
-
-
-<p>
-⏰ ${temple.opening_time}
--
-${temple.closing_time}
-</p>
-
-
-
-<a href="/temples/${temple.id}"
-
-class="btn btn-warning w-100">
-
-View Details
-
-</a>
-
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-`;
-
-
-
-});
-
-
-});
-
+        });
 
 }
-
-
-
-
 
 
 // Load all temples initially
-
 loadTemples();
-
-
-
-
-
 
 
 // Search System
+searchInput.addEventListener("keyup", function() {
+
+    let query = this.value.trim();
 
 
-searchInput.addEventListener("keyup", function(){
+    // If search is empty, show all temples
+    if (query.length === 0) {
+
+        resultBox.innerHTML = "";
+
+        loadTemples();
+
+        return;
+
+    }
 
 
-let query = this.value.trim();
+    // Search API
+    fetch("/api/temples/search?q=" + encodeURIComponent(query))
+
+        .then(response => response.json())
+
+        .then(temples => {
+
+            resultBox.innerHTML = "";
+
+            container.innerHTML = "";
 
 
+            if (temples.length === 0) {
 
-if(query.length === 0){
+                resultBox.innerHTML = `
+                    <div class="alert alert-warning">
+                        No temples found.
+                    </div>
+                `;
 
+                return;
 
-resultBox.innerHTML = "";
-
-loadTemples();
-
-return;
-
-
-}
-
+            }
 
 
+            temples.forEach(temple => {
 
+                resultBox.innerHTML += `
 
-fetch("/api/temples/search?q=" + query)
+                    <div class="card mb-3 shadow-sm">
 
+                        <div class="card-body">
 
-.then(response => response.json())
+                            <h3>
+                                ${temple.name}
+                            </h3>
 
+                            <p>
+                                📍 ${temple.city}
+                            </p>
 
-.then(temples => {
+                            <a
+                                href="/temples/${temple.id}"
+                                class="btn btn-warning"
+                            >
+                                View Details
+                            </a>
 
+                        </div>
 
+                    </div>
 
-resultBox.innerHTML = "";
+                `;
 
+            });
 
+        })
 
-temples.forEach(temple => {
+        .catch(error => {
 
+            console.error("Search error:", error);
 
-
-resultBox.innerHTML += `
-
-
-
-<div class="card shadow p-3 mb-3">
-
-
-
-<h5>
-🛕 ${temple.name}
-</h5>
-
-
-
-<p>
-📍 ${temple.city}
-</p>
-
-
-
-<a href="/temples/${temple.id}"
-
-class="btn btn-warning">
-
-View Details
-
-</a>
-
-
-
-</div>
-
-
-
-`;
-
-
-
-});
-
+        });
 
 });
-
-
-
-});
-
-
-
 
 </script>
-
 
 
 {% endblock %}
