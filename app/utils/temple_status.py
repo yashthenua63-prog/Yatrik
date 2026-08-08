@@ -1,28 +1,31 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
+
+# India Standard Time
+INDIA_TZ = ZoneInfo("Asia/Kolkata")
 
 
 def get_temple_status(temple):
 
-    now = datetime.now().time()
+    # Current Indian time
+    now = datetime.now(INDIA_TZ).time()
 
-
+    # Convert database timings to time objects
     morning_open = datetime.strptime(
         temple.morning_open,
         "%I:%M %p"
     ).time()
-
 
     morning_close = datetime.strptime(
         temple.morning_close,
         "%I:%M %p"
     ).time()
 
-
     evening_open = datetime.strptime(
         temple.evening_open,
         "%I:%M %p"
     ).time()
-
 
     evening_close = datetime.strptime(
         temple.evening_close,
@@ -30,6 +33,9 @@ def get_temple_status(temple):
     ).time()
 
 
+    # -----------------------------------------
+    # MORNING DARSHAN
+    # -----------------------------------------
 
     if morning_open <= now <= morning_close:
 
@@ -40,6 +46,23 @@ def get_temple_status(temple):
         }
 
 
+    # -----------------------------------------
+    # BETWEEN MORNING & EVENING
+    # -----------------------------------------
+
+    elif morning_close < now < evening_open:
+
+        return {
+            "status": "Darshan Break",
+            "color": "orange",
+            "message": f"Evening Darshan starts at {temple.evening_open}"
+        }
+
+
+    # -----------------------------------------
+    # EVENING DARSHAN
+    # -----------------------------------------
+
     elif evening_open <= now <= evening_close:
 
         return {
@@ -49,19 +72,14 @@ def get_temple_status(temple):
         }
 
 
-    elif now < evening_open and now > morning_close:
-
-        return {
-            "status": "Darshan Break",
-            "color": "orange",
-            "message": f"Evening Darshan starts at {temple.evening_open}"
-        }
-
+    # -----------------------------------------
+    # AFTER EVENING DARSHAN
+    # -----------------------------------------
 
     else:
 
         return {
             "status": "Closed",
             "color": "red",
-            "message": f"Next Darshan starts at {temple.morning_open}"
+            "message": f"Next Darshan starts tomorrow at {temple.morning_open}"
         }
