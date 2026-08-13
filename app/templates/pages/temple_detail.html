@@ -14,49 +14,88 @@ https://yatrik-rw1u.onrender.com/temples/{{ temple.id }}
 
 {% block content %}
 <!-- HERO SECTION -->
-<div class="position-relative mb-5" style="height: 50vh; min-height: 400px; background-color: var(--charcoal); overflow: hidden;">
+<div class="temple-hero">
     <img src="{{ url_for('static', filename='images/' + temple.image) }}" 
          onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default_temple.jpg') }}';" 
-         class="w-100 h-100 object-fit-cover opacity-50" 
+         class="temple-hero-img" 
          alt="{{ temple.name }}" 
          loading="eager">
     
-    <div class="position-absolute bottom-0 start-0 w-100 p-4 pb-5 text-white" style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-end">
-                <div>
-                    <h1 class="display-4 fw-bold mb-2 text-white">{{ temple.name }}</h1>
-                    <p class="lead mb-0"><i class="bi bi-geo-alt" style="color: var(--saffron);"></i> {{ temple.city }}</p>
-                </div>
-                <div>
-                    <button class="btn btn-outline-light rounded-pill px-4 shadow-sm" onclick="savePlace({{ temple.id }}, 'temple')" title="Save Temple">
-                        <i class="bi bi-bookmark"></i> Save
-                    </button>
-                </div>
+    <div class="temple-hero-overlay"></div>
+    
+    <div class="container temple-hero-content">
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3">
+            <div>
+                <span class="badge-premium badge-aarti mb-3 border-0">🟡 Darshan Open</span>
+                <h1 class="display-3 fw-bold mb-2 text-white">{{ temple.name }}</h1>
+                <p class="lead mb-0 text-secondary"><i class="bi bi-geo-alt text-saffron"></i> {{ temple.city }}</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-glass" onclick="savePlace({{ temple.id }}, 'temple')" title="Save Temple">
+                    <i class="bi bi-bookmark"></i> Save
+                </button>
+                <a href="https://www.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}" target="_blank" rel="noopener noreferrer" class="btn btn-premium">
+                    <i class="bi bi-geo-alt"></i> Directions
+                </a>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container py-4">
+<div class="container pb-5">
+    
+    <!-- QUICK INFO WIDGETS -->
+    <div class="quick-info-panel mb-5">
+        <div class="info-item border-end border-secondary border-opacity-25 pe-3">
+            <span class="info-label">Current Status</span>
+            <span class="info-value text-emerald">
+                {% if status.status == "Open Now" %}
+                    🟢 Open Now
+                {% elif status.status == "Darshan Break" %}
+                    🟠 Darshan Break
+                {% else %}
+                    🔴 Closed
+                {% endif %}
+            </span>
+        </div>
+        <div class="info-item border-end border-secondary border-opacity-25 pe-3">
+            <span class="info-label">Morning</span>
+            <span class="info-value">{{ temple.morning_open|default('--') }} - {{ temple.morning_close|default('--') }}</span>
+        </div>
+        <div class="info-item border-end border-secondary border-opacity-25 pe-3">
+            <span class="info-label">Evening</span>
+            <span class="info-value">{{ temple.evening_open|default('--') }} - {{ temple.evening_close|default('--') }}</span>
+        </div>
+        <div class="info-item border-end border-secondary border-opacity-25 pe-3">
+            <span class="info-label">Weather</span>
+            <span class="info-value">
+                {% if weather %}
+                    {{ weather.current.temperature_2m }}°C 🌤️
+                {% else %}
+                    --°C
+                {% endif %}
+            </span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Crowd</span>
+            <span class="info-value text-saffron">Low</span>
+        </div>
+    </div>
 
     <div class="row g-5">
         <!-- Main Content -->
         <div class="col-lg-8">
-            <section class="mb-5">
-                <h2 style="color: var(--maroon);" class="fw-bold mb-3">About the Temple</h2>
-                <p class="fs-5" style="color: var(--text-primary); line-height: 1.8;">
+            <section class="mb-5 glass-panel p-4">
+                <h3 class="fw-bold mb-4 text-gradient-saffron">About the Temple</h3>
+                <p class="fs-6 text-secondary" style="line-height: 1.8;">
                     {{ temple.description }}
                 </p>
                 
-                <div class="d-flex gap-2 flex-wrap mt-4">
-                    <a href="https://www.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}" target="_blank" rel="noopener noreferrer" class="btn btn-orange rounded-pill shadow-sm fw-bold">
-                        <i class="bi bi-geo-alt"></i> Get Directions
-                    </a>
-                    <button class="btn btn-outline-dark rounded-pill shadow-sm fw-bold" onclick="addToTripPlanner({{ temple.id }}, 'temple')">
+                <div class="d-flex gap-3 flex-wrap mt-4 pt-3 border-top border-secondary border-opacity-25">
+                    <button class="btn btn-outline-light rounded-pill px-4 fw-bold" onclick="addToTripPlanner({{ temple.id }}, 'temple')">
                         <i class="bi bi-calendar-plus"></i> Add to Itinerary
                     </button>
-                    <button class="btn btn-outline-dark rounded-pill shadow-sm fw-bold" onclick="shareTemple()">
+                    <button class="btn btn-outline-light rounded-pill px-4 fw-bold" onclick="shareTemple()">
                         <i class="bi bi-share"></i> Share
                     </button>
                 </div>
@@ -65,11 +104,11 @@ https://yatrik-rw1u.onrender.com/temples/{{ temple.id }}
             <!-- Gallery -->
             {% if temple.gallery %}
             <section class="mb-5">
-                <h3 style="color: var(--maroon);" class="fw-bold mb-4">Gallery</h3>
+                <h3 class="fw-bold mb-4 text-white">Gallery</h3>
                 <div class="row g-3">
                     {% for img in temple.gallery %}
                     <div class="col-6 col-md-4">
-                        <img src="{{ img }}" loading="lazy" onerror="this.onerror=null;this.style.display='none';" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="height: 150px;" alt="{{ temple.name }} gallery image">
+                        <img src="{{ img }}" loading="lazy" onerror="this.onerror=null;this.style.display='none';" class="img-fluid rounded w-100 object-fit-cover shadow" style="height: 150px; border: 1px solid var(--border);" alt="{{ temple.name }} gallery image">
                     </div>
                     {% endfor %}
                 </div>
@@ -79,11 +118,11 @@ https://yatrik-rw1u.onrender.com/temples/{{ temple.id }}
             <!-- Videos -->
             {% if temple.videos %}
             <section class="mb-5">
-                <h3 style="color: var(--maroon);" class="fw-bold mb-4">Videos</h3>
+                <h3 class="fw-bold mb-4 text-white">Videos</h3>
                 <div class="row g-3">
                     {% for video in temple.videos %}
                     <div class="col-md-6">
-                        <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm">
+                        <div class="ratio ratio-16x9 rounded overflow-hidden shadow border" style="border-color: var(--border) !important;">
                             <iframe src="{{ video }}" title="Temple Video" allowfullscreen></iframe>
                         </div>
                     </div>
@@ -94,8 +133,8 @@ https://yatrik-rw1u.onrender.com/temples/{{ temple.id }}
             
             <!-- Map -->
             <section id="map" class="mb-5">
-                <h3 style="color: var(--maroon);" class="fw-bold mb-4">Location</h3>
-                <div class="card shadow-sm border-0" style="border-radius: var(--radius);">
+                <h3 class="fw-bold mb-4 text-white">Location</h3>
+                <div class="glass-panel p-1">
                     <div class="ratio ratio-21x9 rounded overflow-hidden">
                         <iframe
                             src="https://maps.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}&z=16&output=embed"
@@ -110,22 +149,22 @@ https://yatrik-rw1u.onrender.com/temples/{{ temple.id }}
 
             <!-- Nearby Places -->
             <section class="mb-5">
-                <h3 style="color: var(--maroon);" class="fw-bold mb-4">Places Near You</h3>
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <h3 class="fw-bold mb-4 text-gradient-saffron">Places Near You</h3>
+                <ul class="nav nav-pills mb-4 gap-2" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active rounded-pill fw-bold" id="pills-temples-tab" data-bs-toggle="pill" data-bs-target="#pills-temples" type="button" role="tab" style="color: var(--text-primary);">Temples</button>
+                        <button class="nav-link active rounded-pill btn-glass" id="pills-temples-tab" data-bs-toggle="pill" data-bs-target="#pills-temples" type="button" role="tab" style="color: var(--text-primary);">Temples</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link rounded-pill fw-bold" id="pills-hotels-tab" data-bs-toggle="pill" data-bs-target="#pills-hotels" type="button" role="tab" style="color: var(--text-primary);">Hotels</button>
+                        <button class="nav-link rounded-pill btn-glass" id="pills-hotels-tab" data-bs-toggle="pill" data-bs-target="#pills-hotels" type="button" role="tab" style="color: var(--text-primary);">Hotels</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link rounded-pill fw-bold" id="pills-restaurants-tab" data-bs-toggle="pill" data-bs-target="#pills-restaurants" type="button" role="tab" style="color: var(--text-primary);">Restaurants</button>
+                        <button class="nav-link rounded-pill btn-glass" id="pills-restaurants-tab" data-bs-toggle="pill" data-bs-target="#pills-restaurants" type="button" role="tab" style="color: var(--text-primary);">Restaurants</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-temples" role="tabpanel">
                         <div class="row g-4" id="nearby-temples-container">
-                            <div class="col-12 text-center py-4"><div class="spinner-border text-warning" role="status"></div></div>
+                            <div class="col-12 text-center py-4"><div class="spinner-border text-saffron" role="status"></div></div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="pills-hotels" role="tabpanel">
@@ -149,125 +188,78 @@ https://yatrik-rw1u.onrender.com/temples/{{ temple.id }}
         <!-- Sidebar -->
         <div class="col-lg-4">
             
-            <!-- Status Card -->
-            <div class="card border-0 shadow-sm mb-4" style="border-radius: var(--radius); background-color: var(--cream);">
-                <div class="card-body p-4">
-                    <h4 class="fw-bold mb-3">Live Darshan Status</h4>
-                    <div class="d-flex align-items-center mb-4">
-                        {% if status.status == "Open Now" %}
-                            <span class="badge bg-success fs-6 me-2 rounded-pill">🟢 Open</span>
-                        {% elif status.status == "Darshan Break" %}
-                            <span class="badge bg-warning text-dark fs-6 me-2 rounded-pill">🟠 Break</span>
-                        {% else %}
-                            <span class="badge bg-danger fs-6 me-2 rounded-pill">🔴 Closed</span>
-                        {% endif %}
-                        <span class="text-muted fw-semibold">{{ status.message }}</span>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <small class="text-muted d-block text-uppercase fw-bold" style="letter-spacing: 1px;">Next Darshan</small>
-                        <strong class="fs-5">{{ status.next_darshan }}</strong>
-                    </div>
-                    <div>
-                        <small class="text-muted d-block text-uppercase fw-bold" style="letter-spacing: 1px;">Recommended Arrival</small>
-                        <strong class="fs-5">{{ status.recommended_arrival }}</strong>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Timings -->
-            <div class="card shadow-sm mb-4 border-0" style="border-radius: var(--radius);">
-                <div class="card-body p-4">
-                    <h4 class="fw-bold mb-4"><i class="bi bi-clock" style="color: var(--saffron);"></i> Darshan Timings</h4>
-                    
-                    <div class="d-flex justify-content-between border-bottom pb-3 mb-3">
-                        <span class="fw-bold text-muted">🌅 Morning</span>
-                        <span class="fw-bold">{{ temple.morning_open }} - {{ temple.morning_close }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between border-bottom pb-3 mb-3">
-                        <span class="fw-bold text-muted">🌆 Evening</span>
-                        <span class="fw-bold">{{ temple.evening_open }} - {{ temple.evening_close }}</span>
-                    </div>
-                    {% if temple.expected_duration %}
-                    <div class="d-flex justify-content-between pt-2">
-                        <span class="text-muted">Expected Duration</span>
-                        <span class="fw-bold">{{ temple.expected_duration }}</span>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-
             <!-- Trust / Visit Info -->
-            <div class="card shadow-sm mb-4 border-0" style="border-radius: var(--radius);">
-                <div class="card-body p-4">
-                    <h4 class="fw-bold mb-4"><i class="bi bi-info-circle" style="color: var(--saffron);"></i> Visitor Info</h4>
-                    
-                    {% if temple.best_time_to_visit %}
-                    <p class="mb-3"><strong>Best time to visit:</strong> <br> <span class="text-muted">{{ temple.best_time_to_visit }}</span></p>
-                    {% endif %}
-                    
-                    {% if temple.important_notes %}
-                    <p class="mb-3"><strong>Notes:</strong> <br> <span class="text-muted">{{ temple.important_notes }}</span></p>
-                    {% endif %}
-                    
-                    {% if temple.official_website %}
-                    <p class="mb-0">
-                        <strong>Official Website:</strong> <br>
-                        <a href="{{ temple.official_website }}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-none" style="color: var(--saffron-dark);">Visit Site <i class="bi bi-box-arrow-up-right small"></i></a>
-                    </p>
-                    {% endif %}
+            <div class="glass-panel p-4 mb-4">
+                <h4 class="fw-bold mb-4 text-white"><i class="bi bi-info-circle text-saffron"></i> Visitor Info</h4>
+                
+                {% if temple.best_time_to_visit %}
+                <div class="mb-3">
+                    <div class="text-muted fs-7 text-uppercase tracking-wider">Best time to visit</div>
+                    <div class="fw-bold text-white">{{ temple.best_time_to_visit }}</div>
                 </div>
+                {% endif %}
+                
+                {% if temple.important_notes %}
+                <div class="mb-3">
+                    <div class="text-muted fs-7 text-uppercase tracking-wider">Notes</div>
+                    <div class="text-secondary fs-7">{{ temple.important_notes }}</div>
+                </div>
+                {% endif %}
+                
+                {% if temple.official_website %}
+                <div class="mb-0">
+                    <a href="{{ temple.official_website }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light w-100 rounded-pill mt-2">Visit Official Website <i class="bi bi-box-arrow-up-right small ms-1"></i></a>
+                </div>
+                {% endif %}
             </div>
             
-            <!-- Weather -->
-            <div class="card shadow-sm mb-4 border-0" style="border-radius: var(--radius);">
-                <div class="card-body p-4">
-                    <h4 class="fw-bold mb-3">🌤️ Weather in {{ temple.city }}</h4>
-                    {% if weather %}
-                        {% if weather_alert %}
-                            <div class="alert alert-{{ 'danger' if weather_alert.level == 'danger' else 'warning' if weather_alert.level == 'caution' else 'success' }} shadow-sm rounded">
-                                <p class="mb-1 fw-bold">{{ weather_alert.icon }} {{ weather_alert.title }}</p>
-                                <p class="small mb-0">{{ weather_alert.message }}</p>
-                            </div>
-                        {% endif %}
+            <!-- Weather Details -->
+            <div class="glass-panel p-4 mb-4">
+                <h4 class="fw-bold mb-3 text-white">🌤️ Weather Conditions</h4>
+                {% if weather %}
+                    {% if weather_alert %}
+                        <div class="alert alert-{{ 'danger' if weather_alert.level == 'danger' else 'warning' if weather_alert.level == 'caution' else 'success' }} shadow-sm rounded border-0" style="background: rgba(255, 255, 255, 0.1); color: white;">
+                            <p class="mb-1 fw-bold">{{ weather_alert.icon }} {{ weather_alert.title }}</p>
+                            <p class="small mb-0">{{ weather_alert.message }}</p>
+                        </div>
+                    {% endif %}
 
-                        <div class="row g-2 mt-2 text-center">
-                            <div class="col-6">
-                                <div class="p-3 bg-light rounded h-100">
-                                    <div class="fs-3 mb-1">🌡️</div>
-                                    <h5 class="fw-bold mb-0">{{ weather.current.temperature_2m }}°C</h5>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-3 bg-light rounded h-100">
-                                    <div class="fs-3 mb-1">💧</div>
-                                    <h5 class="fw-bold mb-0">{{ weather.current.relative_humidity_2m }}%</h5>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-3 bg-light rounded h-100">
-                                    <div class="fs-3 mb-1">🌧️</div>
-                                    <h5 class="fw-bold mb-0">
-                                        {% set current_hour = weather.current.time[:13] ~ ":00" %}
-                                        {% if current_hour in weather.hourly.time %}
-                                            {{ weather.hourly.precipitation_probability[weather.hourly.time.index(current_hour)] }}%
-                                        {% else %}
-                                            --
-                                        {% endif %}
-                                    </h5>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-3 bg-light rounded h-100">
-                                    <div class="fs-3 mb-1">💨</div>
-                                    <h5 class="fw-bold mb-0">{{ weather.current.wind_speed_10m }}kph</h5>
-                                </div>
+                    <div class="row g-3 mt-2 text-center">
+                        <div class="col-6">
+                            <div class="p-3 bg-secondary bg-opacity-25 rounded border border-secondary border-opacity-50 h-100">
+                                <div class="fs-4 mb-1">🌡️</div>
+                                <h5 class="fw-bold mb-0 text-white">{{ weather.current.temperature_2m }}°C</h5>
                             </div>
                         </div>
-                    {% else %}
-                        <p class="text-muted small mb-0"><i class="bi bi-cloud-slash"></i> Weather unavailable.</p>
-                    {% endif %}
-                </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-secondary bg-opacity-25 rounded border border-secondary border-opacity-50 h-100">
+                                <div class="fs-4 mb-1">💧</div>
+                                <h5 class="fw-bold mb-0 text-white">{{ weather.current.relative_humidity_2m }}%</h5>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-secondary bg-opacity-25 rounded border border-secondary border-opacity-50 h-100">
+                                <div class="fs-4 mb-1">🌧️</div>
+                                <h5 class="fw-bold mb-0 text-white">
+                                    {% set current_hour = weather.current.time[:13] ~ ":00" %}
+                                    {% if current_hour in weather.hourly.time %}
+                                        {{ weather.hourly.precipitation_probability[weather.hourly.time.index(current_hour)] }}%
+                                    {% else %}
+                                        --
+                                    {% endif %}
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-secondary bg-opacity-25 rounded border border-secondary border-opacity-50 h-100">
+                                <div class="fs-4 mb-1">💨</div>
+                                <h5 class="fw-bold mb-0 text-white">{{ weather.current.wind_speed_10m }} kph</h5>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-muted small mb-0"><i class="bi bi-cloud-slash"></i> Weather unavailable.</p>
+                {% endif %}
             </div>
 
         </div>
@@ -280,7 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const hotelContainer = document.getElementById("nearby-hotels-container");
     const restaurantContainer = document.getElementById("nearby-restaurants-container");
     
-    // Fetch nearby temples
+    // Fetch nearby places
     if (templeContainer) {
         fetch("/api/temples/{{ temple.id }}/nearby")
             .then(response => {
@@ -292,85 +284,61 @@ document.addEventListener("DOMContentLoaded", function () {
                 const hotels = places.filter(p => p.type === 'hotel');
                 const restaurants = places.filter(p => p.type === 'restaurant');
 
+                function createCard(item, linkPrefix) {
+                    return `
+                        <div class="col-12 col-md-6">
+                            <a href="/${linkPrefix}/${item.id}" class="text-decoration-none">
+                                <div class="premium-card h-100">
+                                    <div class="card-img-wrapper" style="height: 150px;">
+                                        <img src="${item.image ? item.image : '/static/images/default_' + item.type + '.jpg'}" 
+                                             loading="lazy" 
+                                             onerror="this.onerror=null;this.src='/static/images/default_${item.type}.jpg';" 
+                                             alt="${item.name}">
+                                        <div class="card-img-overlay-gradient"></div>
+                                    </div>
+                                    <div class="card-body-premium p-3">
+                                        <h6 class="fw-bold mb-1 text-white text-truncate">${item.name}</h6>
+                                        <p class="text-muted small mb-0"><i class="bi bi-geo-alt text-saffron"></i> ${item.city} &bull; 📏 ${item.distance} km</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                }
+
                 // Render Temples
                 templeContainer.innerHTML = "";
                 if (!temples.length) {
-                    templeContainer.innerHTML = `<div class="col-12"><div class="alert alert-light border">No nearby temples found.</div></div>`;
+                    templeContainer.innerHTML = `<div class="col-12"><div class="glass-panel text-center p-4 text-muted">No nearby temples found.</div></div>`;
                 } else {
                     temples.forEach(temple => {
-                        templeContainer.innerHTML += `
-                            <div class="col-12 col-md-6">
-                                <div class="card shadow-sm h-100 border-0" style="border-radius: var(--radius);">
-                                    <img src="${temple.image ? temple.image : '/static/images/default_temple.jpg'}" 
-                                         loading="lazy" 
-                                         onerror="this.onerror=null;this.src='/static/images/default_temple.jpg';" 
-                                         class="card-img-top object-fit-cover" 
-                                         style="height:150px; border-top-left-radius: var(--radius); border-top-right-radius: var(--radius);" 
-                                         alt="${temple.name}">
-                                    <div class="card-body">
-                                        <h5 class="fw-bold mb-1 text-dark">${temple.name}</h5>
-                                        <p class="text-muted small mb-3"><i class="bi bi-geo-alt" style="color: var(--saffron);"></i> ${temple.city} &bull; 📏 ${temple.distance} km</p>
-                                        <a href="/temples/${temple.id}" class="btn btn-sm btn-outline-dark rounded-pill fw-bold w-100">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                        templeContainer.innerHTML += createCard(temple, 'temples');
                     });
                 }
 
                 // Render Hotels
                 hotelContainer.innerHTML = "";
                 if (!hotels.length) {
-                    hotelContainer.innerHTML = `<div class="col-12"><div class="alert alert-light border">No nearby hotels found.</div></div>`;
+                    hotelContainer.innerHTML = `<div class="col-12"><div class="glass-panel text-center p-4 text-muted">No nearby stays found.</div></div>`;
                 } else {
                     hotels.forEach(hotel => {
-                        hotelContainer.innerHTML += `
-                            <div class="col-12 col-md-6">
-                                <div class="card shadow-sm h-100 border-0" style="border-radius: var(--radius);">
-                                    <img src="${hotel.image ? hotel.image : '/static/images/default_hotel.jpg'}" 
-                                         loading="lazy" 
-                                         class="card-img-top object-fit-cover" 
-                                         style="height:150px;" 
-                                         alt="${hotel.name}">
-                                    <div class="card-body">
-                                        <h5 class="fw-bold mb-1 text-dark">${hotel.name}</h5>
-                                        <p class="text-muted small mb-3"><i class="bi bi-geo-alt" style="color: var(--saffron);"></i> ${hotel.city} &bull; 📏 ${hotel.distance} km</p>
-                                        <a href="/hotels/${hotel.id}" class="btn btn-sm btn-outline-dark rounded-pill fw-bold w-100">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                        hotelContainer.innerHTML += createCard(hotel, 'hotels');
                     });
                 }
 
                 // Render Restaurants
                 restaurantContainer.innerHTML = "";
                 if (!restaurants.length) {
-                    restaurantContainer.innerHTML = `<div class="col-12"><div class="alert alert-light border">No nearby restaurants found.</div></div>`;
+                    restaurantContainer.innerHTML = `<div class="col-12"><div class="glass-panel text-center p-4 text-muted">No nearby restaurants found.</div></div>`;
                 } else {
                     restaurants.forEach(restaurant => {
-                        restaurantContainer.innerHTML += `
-                            <div class="col-12 col-md-6">
-                                <div class="card shadow-sm h-100 border-0" style="border-radius: var(--radius);">
-                                    <img src="${restaurant.image ? restaurant.image : '/static/images/default_restaurant.jpg'}" 
-                                         loading="lazy" 
-                                         class="card-img-top object-fit-cover" 
-                                         style="height:150px;" 
-                                         alt="${restaurant.name}">
-                                    <div class="card-body">
-                                        <h5 class="fw-bold mb-1 text-dark">${restaurant.name}</h5>
-                                        <p class="text-muted small mb-3"><i class="bi bi-geo-alt" style="color: var(--saffron);"></i> ${restaurant.city} &bull; 📏 ${restaurant.distance} km</p>
-                                        <a href="/restaurants/${restaurant.id}" class="btn btn-sm btn-outline-dark rounded-pill fw-bold w-100">View Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                        restaurantContainer.innerHTML += createCard(restaurant, 'restaurants');
                     });
                 }
             })
             .catch(error => {
                 console.error("Nearby error:", error);
-                templeContainer.innerHTML = `<div class="col-12"><div class="alert alert-light border">Unable to load nearby places.</div></div>`;
+                templeContainer.innerHTML = `<div class="col-12"><div class="glass-panel p-4 text-muted">Unable to load nearby places.</div></div>`;
             });
     }
 });

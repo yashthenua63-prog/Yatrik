@@ -7,54 +7,50 @@ Trip Planner | Yatrik
 {% block content %}
 <div class="container py-5">
     <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold">📅 Trip Planner</h1>
-        <p class="lead text-muted">Create a personalized itinerary for your Braj yatra.</p>
+        <h1 class="display-4 fw-bold text-gradient-saffron">🗺️ Yatra Planner</h1>
+        <p class="lead text-secondary">Create a personalized itinerary for your spiritual journey.</p>
     </div>
 
     <div class="row g-4">
         <!-- My Trips -->
         <div class="col-lg-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h2 class="h5 fw-bold mb-4">My Trips</h2>
-                    <div id="trips-list" class="list-group list-group-flush mb-4">
-                        <div class="text-center py-3 text-muted">Loading trips...</div>
-                    </div>
-                    <button class="btn btn-outline-primary w-100" onclick="createNewTrip()">
-                        <i class="bi bi-plus-circle"></i> Create New Trip
-                    </button>
+            <div class="glass-panel p-4 h-100">
+                <h2 class="h5 fw-bold mb-4 text-white">Your Journeys</h2>
+                <div id="trips-list" class="list-group list-group-flush mb-4 bg-transparent">
+                    <div class="text-center py-3 text-muted">Loading trips...</div>
                 </div>
+                <button class="btn btn-premium w-100" onclick="createNewTrip()">
+                    <i class="bi bi-plus-circle"></i> Create New Yatra
+                </button>
             </div>
         </div>
 
         <!-- Trip Editor -->
         <div class="col-lg-8">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body" id="trip-editor" style="display: none;">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="h4 fw-bold mb-0" id="current-trip-name">Trip Details</h2>
+            <div class="glass-panel p-4 h-100 position-relative">
+                <div id="trip-editor" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+                        <h2 class="h4 fw-bold mb-0 text-white" id="current-trip-name">Trip Details</h2>
+                        <span class="badge-premium badge-time">✏️ Editing</span>
                     </div>
 
-                    <div id="trip-items" class="mb-4">
+                    <div id="trip-items" class="mb-5 journey-timeline">
                         <!-- Items rendered here -->
                     </div>
 
-                    <div class="card bg-light border-0">
-                        <div class="card-body">
-                            <h5 class="fw-bold mb-3">Add Custom Item</h5>
-                            <div class="input-group">
-                                <input type="text" id="custom-item-input" class="form-control" placeholder="e.g. Lunch at 12:00 PM">
-                                <button class="btn btn-success" onclick="addCustomItem()">Add</button>
-                            </div>
+                    <div class="p-4 rounded border border-secondary border-opacity-25" style="background: rgba(255,255,255,0.02);">
+                        <h5 class="fw-bold mb-3 text-white">Add Custom Step</h5>
+                        <div class="d-flex gap-2">
+                            <input type="text" id="custom-item-input" class="form-control" placeholder="e.g. Mangala Aarti at 5:00 AM">
+                            <button class="btn btn-premium px-4" onclick="addCustomItem()">Add</button>
                         </div>
                     </div>
                 </div>
-                <div class="card-body d-flex align-items-center justify-content-center" id="trip-editor-empty">
-                    <div class="text-center text-muted py-5">
-                        <i class="bi bi-map" style="font-size: 3rem;"></i>
-                        <h3 class="h5 mt-3">Select or Create a Trip</h3>
-                        <p>Your itinerary details will appear here.</p>
-                    </div>
+                
+                <div id="trip-editor-empty" class="h-100 d-flex align-items-center justify-content-center flex-column text-center py-5">
+                    <i class="bi bi-map text-muted mb-3" style="font-size: 4rem; opacity: 0.5;"></i>
+                    <h3 class="h4 text-white">Select or Create a Yatra</h3>
+                    <p class="text-secondary">Your spiritual itinerary will appear here.</p>
                 </div>
             </div>
         </div>
@@ -62,29 +58,47 @@ Trip Planner | Yatrik
     
     <!-- Smart Day Plan -->
     <div class="mt-5">
-        <div class="card shadow-sm border-0 bg-primary text-white">
-            <div class="card-body p-4 p-md-5 text-center">
-                <h2 class="fw-bold mb-3">🤖 Smart Day Plan</h2>
-                <p class="mb-4">Short on time? Let Yatrik recommend a route based on your available time and location.</p>
-                <div class="d-flex justify-content-center gap-2 flex-wrap">
-                    <select class="form-select w-auto" id="smart-time">
-                        <option value="2">2 Hours</option>
-                        <option value="4">Half Day (4 Hours)</option>
-                        <option value="8">Full Day</option>
-                    </select>
-                    <select class="form-select w-auto" id="smart-area">
-                        <option value="Vrindavan">Vrindavan</option>
-                        <option value="Mathura">Mathura</option>
-                        <option value="Govardhan">Govardhan</option>
-                    </select>
-                    <button class="btn btn-light text-primary fw-bold px-4" onclick="generateSmartPlan()">Generate Plan</button>
-                </div>
-                <div id="smart-plan-results" class="mt-4 text-start bg-white text-dark rounded p-4" style="display: none;">
-                </div>
+        <div class="glass-panel p-5 text-center position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(0, 210, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-color: rgba(0, 210, 255, 0.2);">
+            
+            <h2 class="fw-bold mb-3 text-white">🤖 Smart Day Plan</h2>
+            <p class="text-secondary mb-4 mx-auto" style="max-width: 600px;">Short on time? Let Yatrik recommend a route based on your available time and location.</p>
+            
+            <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
+                <select class="form-select w-auto bg-dark border-secondary text-white" id="smart-time">
+                    <option value="2">2 Hours</option>
+                    <option value="4">Half Day (4 Hours)</option>
+                    <option value="8">Full Day</option>
+                </select>
+                <select class="form-select w-auto bg-dark border-secondary text-white" id="smart-area">
+                    <option value="Vrindavan">Vrindavan</option>
+                    <option value="Mathura">Mathura</option>
+                    <option value="Govardhan">Govardhan</option>
+                </select>
+                <button class="btn btn-premium px-4" onclick="generateSmartPlan()">Generate Plan</button>
+            </div>
+            
+            <div id="smart-plan-results" class="mt-4 text-start p-4 rounded border border-secondary border-opacity-25" style="display: none; background: rgba(0,0,0,0.2);">
             </div>
         </div>
     </div>
 </div>
+
+<style>
+.journey-timeline {
+    position: relative;
+    padding-left: 1.5rem;
+}
+.journey-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--grad-saffron-gold);
+    border-radius: 2px;
+}
+</style>
 
 <script>
 let currentTripId = null;
@@ -105,10 +119,10 @@ function loadTrips() {
             }
             data.forEach(trip => {
                 const btn = document.createElement("button");
-                btn.className = "list-group-item list-group-item-action d-flex justify-content-between align-items-center";
+                btn.className = "list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-transparent border-secondary border-opacity-25 text-white mb-2 rounded";
                 btn.innerHTML = `
                     <span class="fw-bold">${trip.name}</span>
-                    <span class="badge bg-secondary rounded-pill">${trip.items.length} items</span>
+                    <span class="badge bg-saffron rounded-pill text-dark">${trip.items.length} items</span>
                 `;
                 btn.onclick = () => showTrip(trip);
                 list.appendChild(btn);
@@ -117,7 +131,7 @@ function loadTrips() {
 }
 
 function createNewTrip() {
-    const name = prompt("Enter a name for your trip (e.g., 'Vrindavan 1 Day'):", "My Trip");
+    const name = prompt("Enter a name for your yatra (e.g., 'Vrindavan 1 Day'):", "My Yatra");
     if (!name) return;
     
     fetch("/api/planner/trips", {
@@ -142,20 +156,20 @@ function showTrip(trip) {
     itemsContainer.innerHTML = "";
     
     if (trip.items.length === 0) {
-        itemsContainer.innerHTML = `<div class="alert alert-light text-center">Your itinerary is empty. Add places from the Explore page or add custom items below.</div>`;
+        itemsContainer.innerHTML = `<div class="p-3 text-center text-muted border border-secondary border-opacity-25 rounded mb-3">Your itinerary is empty. Add places from the Explore page or add custom items below.</div>`;
         return;
     }
     
     trip.items.forEach((item, index) => {
         const div = document.createElement("div");
-        div.className = "card mb-2 shadow-sm border-0";
+        div.className = "mb-3 position-relative";
         div.innerHTML = `
-            <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+            <div class="position-absolute" style="left: -1.9rem; top: 0.75rem; width: 1rem; height: 1rem; background: var(--saffron); border-radius: 50%; box-shadow: 0 0 10px var(--saffron);"></div>
+            <div class="p-3 rounded border border-secondary border-opacity-25 d-flex justify-content-between align-items-center" style="background: rgba(255,255,255,0.03);">
                 <div class="d-flex align-items-center gap-3">
-                    <span class="badge bg-primary rounded-circle">${index + 1}</span>
-                    <span class="fw-bold">${item.name}</span>
+                    <span class="text-white fw-bold">${item.name}</span>
                 </div>
-                <button class="btn btn-sm btn-outline-danger border-0" onclick="removeTripItem(${item.id})">
+                <button class="btn btn-sm btn-outline-danger rounded-circle border-0" onclick="removeTripItem(${item.id})">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -177,7 +191,6 @@ function addCustomItem() {
     .then(res => res.json())
     .then(() => {
         input.value = "";
-        // Reload just this trip by fetching all and finding it, or ideally a dedicated endpoint
         fetch("/api/planner/trips")
             .then(res => res.json())
             .then(data => {
@@ -210,10 +223,8 @@ function generateSmartPlan() {
     const res = document.getElementById("smart-plan-results");
     
     res.style.display = "block";
-    res.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Generating your optimal route...</p></div>`;
+    res.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-sky" role="status"></div><p class="mt-2 text-secondary">Generating your optimal spiritual route...</p></div>`;
     
-    // In a real app, this would call a backend endpoint that does rule-based routing.
-    // For MVP, we simulate a simple rule-based response.
     setTimeout(() => {
         let places = [];
         if (area === "Vrindavan") {
@@ -224,22 +235,21 @@ function generateSmartPlan() {
             places = ["Giriraj Ji Parikrama", "Radha Kund", "Kusum Sarovar"];
         }
         
-        // Limit places based on time
         const limit = time === "2" ? 2 : (time === "4" ? 4 : places.length);
         const selected = places.slice(0, limit);
         
-        let html = `<h4 class="fw-bold mb-3">Recommended ${time} Hour Plan in ${area}</h4>`;
-        html += `<div class="alert alert-info py-2 small mb-4">Note: This sequence minimizes travel time between major spots.</div>`;
+        let html = `<h4 class="fw-bold mb-3 text-white">Recommended ${time} Hour Plan in ${area}</h4>`;
+        html += `<div class="alert alert-info py-2 small mb-4 border-0" style="background: rgba(0, 210, 255, 0.1); color: var(--sky-blue);">Note: This sequence minimizes travel time between major spots.</div>`;
         
-        html += '<ul class="list-group list-group-flush mb-3">';
+        html += '<div class="journey-timeline mb-4">';
         selected.forEach((p, i) => {
-            html += `<li class="list-group-item d-flex align-items-center gap-3">
-                <span class="badge bg-success rounded-circle">${i + 1}</span>
-                <span class="fw-bold">${p}</span>
-            </li>`;
+            html += `<div class="mb-3 position-relative">
+                <div class="position-absolute" style="left: -1.9rem; top: 0.25rem; width: 0.8rem; height: 0.8rem; background: var(--saffron); border-radius: 50%;"></div>
+                <div class="text-white fw-bold">${p}</div>
+            </div>`;
         });
-        html += '</ul>';
-        html += `<button class="btn btn-primary" onclick="alert('Saving smart plan is coming soon!')">Save this Plan</button>`;
+        html += '</div>';
+        html += `<button class="btn btn-outline-light rounded-pill px-4" onclick="alert('Saving smart plan is coming soon!')">Save this Plan</button>`;
         
         res.innerHTML = html;
     }, 1500);

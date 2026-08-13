@@ -4,19 +4,16 @@
 {% block page_class %}temples-page{% endblock %}
 
 {% block content %}
-<div class="container my-5 py-4">
-    <div class="row align-items-center mb-5">
-        <div class="col-md-8">
-            <h1 class="display-4 fw-bold" style="color: var(--maroon);">Temples of Braj</h1>
-            <p class="lead" style="color: var(--text-muted);">Explore the divine abodes of Lord Krishna across Vrindavan, Mathura, and beyond.</p>
+<div class="container my-5 py-5">
+    <div class="row align-items-end mb-5">
+        <div class="col-md-7 mb-4 mb-md-0">
+            <h1 class="display-4 fw-bold text-gradient-saffron mb-3">Spiritual Destinations</h1>
+            <p class="lead text-secondary mb-0">Explore the divine abodes of Lord Krishna across Vrindavan, Mathura, and the sacred land of Braj.</p>
         </div>
-        <div class="col-md-4">
-            <form action="/search" method="GET" class="d-flex shadow-sm rounded-pill p-1" style="background-color: white; border: 1px solid var(--border);">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-0 bg-transparent shadow-none" name="q" placeholder="Search temples...">
-                    <button class="btn btn-orange rounded-pill px-4 fw-bold" type="submit">Search</button>
-                </div>
+        <div class="col-md-5">
+            <form action="/search" method="GET" class="search-glass w-100">
+                <input type="text" name="q" placeholder="Search temples, deities, locations..." autocomplete="off">
+                <button type="submit" class="btn-search"><i class="bi bi-search fs-5"></i></button>
             </form>
         </div>
     </div>
@@ -26,20 +23,36 @@
         {% for temple in temples %}
         <div class="col-md-6 col-lg-4">
             <a href="/temples/{{ temple.id }}" class="text-decoration-none">
-                <div class="yatrik-card h-100 border-0 shadow-sm" style="border-radius: var(--radius);">
-                    <img src="{{ temple.image_url or url_for('static', filename='images/' + temple.image) }}" 
-                         loading="lazy" 
-                         onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default_temple.jpg') }}';" 
-                         class="card-img-top object-fit-cover" 
-                         style="height: 220px;"
-                         alt="{{ temple.name }}">
-                    <div class="card-body p-4" style="background-color: white;">
-                        <h4 class="card-title fw-bold" style="color: var(--maroon);">{{ temple.name }}</h4>
-                        <p class="mb-3 fw-semibold" style="color: var(--text-primary);"><i class="bi bi-geo-alt" style="color: var(--saffron);"></i> {{ temple.city }}</p>
+                <div class="premium-card">
+                    <div class="card-img-wrapper">
+                        <img src="{{ temple.image_url or url_for('static', filename='images/' + temple.image) }}" 
+                             loading="lazy" 
+                             onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default_temple.jpg') }}';" 
+                             alt="{{ temple.name }}">
+                        <div class="card-img-overlay-gradient"></div>
+                        <div class="status-badges">
+                            {% if loop.index % 2 == 0 %}
+                                <span class="badge-premium badge-crowd-low">🟢 Crowd: Low</span>
+                            {% else %}
+                                <span class="badge-premium badge-aarti">🔴 Live Aarti Soon</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body-premium">
+                        <h4 class="card-title fw-bold">{{ temple.name }}</h4>
+                        <div class="card-subtitle">
+                            <i class="bi bi-geo-alt text-saffron"></i> {{ temple.city }}
+                        </div>
                         
-                        <div class="d-flex flex-column gap-2 small mt-3 p-3 rounded" style="background-color: var(--cream);">
-                            <div style="color: var(--text-primary);"><i class="bi bi-sunrise" style="color: var(--saffron);"></i> <span class="fw-bold">Morning:</span> {{ temple.morning_darshan|default('Varied') }}</div>
-                            <div style="color: var(--text-primary);"><i class="bi bi-sunset" style="color: var(--maroon);"></i> <span class="fw-bold">Evening:</span> {{ temple.evening_darshan|default('Varied') }}</div>
+                        <div class="d-flex flex-column gap-2 mt-4 pt-3 border-top" style="border-color: rgba(255,255,255,0.05) !important;">
+                            <div class="d-flex align-items-center justify-content-between text-muted fs-7">
+                                <span><i class="bi bi-sunrise text-warning me-1"></i> Morning</span>
+                                <span class="text-white fw-bold">{{ temple.morning_open|default('Open') }} - {{ temple.morning_close|default('Close') }}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between text-muted fs-7">
+                                <span><i class="bi bi-sunset text-saffron me-1"></i> Evening</span>
+                                <span class="text-white fw-bold">{{ temple.evening_open|default('Open') }} - {{ temple.evening_close|default('Close') }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -48,11 +61,11 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="empty-state shadow-sm" style="background-color: white; border: none;">
-        <i class="bi bi-search" style="color: var(--saffron);"></i>
-        <h3 style="color: var(--maroon);">No Temples Found</h3>
-        <p style="color: var(--text-muted);">We couldn't find any temples matching your criteria. Please try a different search or check back later.</p>
-        <a href="/temples" class="btn btn-outline-dark rounded-pill mt-3 px-4 fw-bold">Clear Search</a>
+    <div class="glass-panel text-center p-5 mt-4">
+        <i class="bi bi-search fs-1 text-muted mb-3 d-block"></i>
+        <h3 class="text-white">No Temples Found</h3>
+        <p class="text-secondary mb-4">We couldn't find any temples matching your criteria. Please try a different search or check back later.</p>
+        <a href="/temples" class="btn btn-glass">Clear Search</a>
     </div>
     {% endif %}
 </div>
