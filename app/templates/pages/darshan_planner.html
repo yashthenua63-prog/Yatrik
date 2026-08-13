@@ -1,0 +1,162 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold">Darshan Planner</h1>
+                <p class="lead text-muted">Select the temples you want to visit and Yatrik will suggest an efficient sequence based on distance and timings.</p>
+            </div>
+
+            <div class="yatrik-card p-4 p-md-5 mb-5">
+                <form id="darshanPlannerForm">
+                    <h4 class="mb-4">1. Select Temples to Visit</h4>
+                    
+                    <div class="row g-3 mb-4">
+                        {% set popular_temples = ['Banke Bihari Temple', 'Prem Mandir', 'ISKCON Vrindavan', 'Radha Raman Temple', 'Nidhivan', 'Shri Krishna Janmasthan', 'Dwarkadhish Temple', 'Radha Kund', 'Dan Ghati Temple'] %}
+                        
+                        {% for temple_name in popular_temples %}
+                        <div class="col-md-6">
+                            <div class="form-check custom-checkbox">
+                                <input class="form-check-input temple-checkbox" type="checkbox" value="{{ temple_name }}" id="temple_{{ loop.index }}">
+                                <label class="form-check-label" for="temple_{{ loop.index }}">
+                                    {{ temple_name }}
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label text-muted">Or enter other temple names (one per line):</label>
+                        <textarea class="form-control" id="customTemples" rows="3" placeholder="e.g. Gopeshwar Mahadev"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-orange w-100 py-3 fs-5" id="planBtn">
+                        <i class="bi bi-magic"></i> Generate Optimal Route
+                    </button>
+                </form>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="resultsSection" class="d-none">
+                <h3 class="mb-4 text-center">Your Optimized Darshan Sequence</h3>
+                
+                <div class="alert alert-info border-0 shadow-sm d-flex align-items-center mb-4">
+                    <i class="bi bi-info-circle-fill fs-3 me-3 text-info"></i>
+                    <div>
+                        <strong>Note:</strong> Timings are approximate. Always verify locally before visiting, especially during festivals or special occasions.
+                    </div>
+                </div>
+
+                <div class="timeline-container" id="timelineResults">
+                    <!-- Populated via JS -->
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-outline-dark" onclick="window.print()">Print Itinerary</button>
+                    <button class="btn btn-outline-primary ms-2" onclick="location.reload()">Plan Another Route</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.custom-checkbox .form-check-input {
+    width: 1.25em;
+    height: 1.25em;
+    margin-top: 0.15em;
+}
+.custom-checkbox .form-check-label {
+    font-size: 1.1rem;
+    padding-left: 0.5rem;
+}
+.timeline-item {
+    position: relative;
+    padding-left: 3rem;
+    margin-bottom: 2rem;
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    top: 2rem;
+    bottom: -2rem;
+    width: 2px;
+    background: var(--border);
+}
+.timeline-item:last-child::before {
+    display: none;
+}
+.timeline-number {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--saffron);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 2;
+}
+</style>
+
+<script>
+document.getElementById('darshanPlannerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const btn = document.getElementById('planBtn');
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Planning...';
+    btn.disabled = true;
+    
+    // Gather selected temples
+    const selected = [];
+    document.querySelectorAll('.temple-checkbox:checked').forEach(cb => selected.push(cb.value));
+    
+    const custom = document.getElementById('customTemples').value.trim();
+    if (custom) {
+        custom.split('\n').forEach(line => {
+            if (line.trim()) selected.push(line.trim());
+        });
+    }
+    
+    if (selected.length === 0) {
+        alert("Please select at least one temple.");
+        btn.innerHTML = '<i class="bi bi-magic"></i> Generate Optimal Route';
+        btn.disabled = false;
+        return;
+    }
+    
+    // Simulate API call for now (since backend route might not be ready)
+    setTimeout(() => {
+        document.getElementById('darshanPlannerForm').parentElement.classList.add('d-none');
+        document.getElementById('resultsSection').classList.remove('d-none');
+        
+        const timeline = document.getElementById('timelineResults');
+        timeline.innerHTML = '';
+        
+        selected.forEach((temple, index) => {
+            timeline.innerHTML += `
+                <div class="timeline-item">
+                    <div class="timeline-number">${index + 1}</div>
+                    <div class="yatrik-card p-3 bg-white">
+                        <h5 class="mb-1 text-primary">${temple}</h5>
+                        <p class="text-muted small mb-0"><i class="bi bi-clock"></i> Suggested: ${index === 0 ? 'Morning (7:00 AM - 12:00 PM)' : 'Evening (4:00 PM - 8:30 PM)'}</p>
+                    </div>
+                </div>
+            `;
+        });
+        
+        btn.innerHTML = '<i class="bi bi-magic"></i> Generate Optimal Route';
+        btn.disabled = false;
+    }, 1500);
+});
+</script>
+{% endblock %}

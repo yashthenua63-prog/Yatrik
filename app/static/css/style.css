@@ -1,297 +1,342 @@
-:root{
-    --primary:#ff7a00;
-    --secondary:#ffc107;
-    --dark:#111827;
-    --light:#f8fafc;
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --saffron: hsl(27, 95%, 52%);        /* Primary orange/saffron #F77B20 */
+  --saffron-light: hsl(27, 100%, 95%);
+  --saffron-dark: hsl(27, 90%, 40%);
+  --maroon: hsl(0, 62%, 30%);          /* Deep red/maroon */
+  --maroon-light: hsl(0, 62%, 95%);
+  --sage: hsl(145, 30%, 40%);          /* Muted sage green */
+  --gold: hsl(45, 90%, 48%);           /* Gold */
+  --cream: hsl(40, 30%, 97%);          /* Off-white background */
+  --text-primary: hsl(220, 15%, 15%);
+  --text-muted: hsl(220, 10%, 50%);
+  --border: hsl(220, 15%, 90%);
+  --card-shadow: 0 2px 16px hsl(220 15% 15% / 0.07);
+  --card-shadow-hover: 0 8px 32px hsl(220 15% 15% / 0.14);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 50px;
 }
 
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--cream);
+  color: var(--text-primary);
+  line-height: 1.6;
+  padding-top: 70px; /* navbar offset */
 }
 
-
-body{
-    font-family:'Poppins',sans-serif;
-    background:#f8fafc;
-    color:#222;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Mukta', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-
-/* =========================
-   Navbar
-========================= */
-
-.custom-navbar{
-
-    background:rgba(17,24,39,0.75);
-    backdrop-filter:blur(12px);
-    padding:15px 0;
-
+/* Links and global elements */
+a {
+  color: var(--saffron-dark);
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-
-.navbar-brand{
-
-    color:white!important;
-    font-weight:800;
-
+a:hover {
+  color: var(--maroon);
 }
 
-
-.nav-link{
-
-    color:white!important;
-    margin-left:18px;
-    font-weight:500;
-    transition:.3s;
-
+/* Navbar */
+.custom-navbar {
+  background-color: var(--text-primary);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 0.75rem 0;
+  transition: all 0.2s ease;
 }
 
-
-.nav-link:hover{
-
-    color:#ffc107!important;
-
+.custom-navbar .navbar-brand {
+  color: var(--saffron);
+  font-family: 'Mukta', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
 }
 
-
-/* =========================
-   Hero Section
-========================= */
-
-
-.hero{
-
-    min-height:90vh;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    text-align:center;
-
-    color:white;
-
-
-    background:
-
-    linear-gradient(
-        rgba(0,0,0,.55),
-        rgba(0,0,0,.75)
-    ),
-
-    url("/static/images/prem_mandir.jpg");
-
-
-    background-size:cover;
-    background-position:center;
-
+.custom-navbar .navbar-brand:hover {
+  color: var(--saffron-light);
 }
 
-
-
-.hero h1{
-
-    font-size:4rem;
-    font-weight:800;
-
+.custom-navbar .nav-link {
+  color: #fff;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  margin: 0 0.25rem;
 }
 
-
-.hero p{
-
-    font-size:1.4rem;
-    margin-top:20px;
-
+.custom-navbar .nav-link:hover {
+  color: var(--saffron);
 }
 
-
-
-.hero span{
-
-    color:#ffc107;
-
+/* Buttons */
+.btn {
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
-
-/* =========================
- Search Box
-========================= */
-
-
-.search-box{
-
-    max-width:700px;
-    margin:auto;
-
+.btn-orange {
+  background-color: var(--saffron);
+  color: white;
+  border: none;
 }
 
-
-
-.search-box input{
-
-    border-radius:50px;
-    padding:20px 30px;
-
-    border:none;
-
-    box-shadow:
-    0 15px 40px rgba(0,0,0,.3);
-
-    font-size:18px;
-
+.btn-orange:hover {
+  background-color: var(--saffron-dark);
+  color: white;
+  transform: translateY(-1px);
 }
 
-
-
-/* =========================
- Buttons
-========================= */
-
-
-.btn-orange{
-
-    background:#ff7a00;
-    color:white;
-
-    border-radius:50px;
-
-    padding:12px 30px;
-
-    font-weight:600;
-
-    border:none;
-
+.btn-orange.rounded-pill {
+  border-radius: var(--radius-pill);
 }
 
-
-
-.btn-orange:hover{
-
-    background:#e56700;
-    color:white;
-
+/* Hero Section */
+.hero-section {
+  width: 100%;
+  background-color: var(--cream);
+  padding: 5rem 1rem;
+  text-align: center;
+  background-image: linear-gradient(135deg, var(--saffron-light) 0%, var(--cream) 100%);
 }
 
-
-
-/* =========================
- Temple Cards
-========================= */
-
-
-.card{
-
-    border:none;
-
-    border-radius:20px;
-
-    overflow:hidden;
-
-    transition:.35s;
-
+.hero-section h1 {
+  font-size: 3.5rem;
+  color: var(--maroon);
+  margin-bottom: 1rem;
 }
 
-
-
-.card img{
-
-    height:250px;
-
-    object-fit:cover;
-
+.hero-section p {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto 2rem;
 }
 
-
-
-.card:hover{
-
-    transform:translateY(-12px);
-
-    box-shadow:
-    0 20px 40px rgba(0,0,0,.18);
-
+/* Cards */
+.yatrik-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s ease;
+  overflow: hidden;
+  height: 100%;
 }
 
-
-
-.card h4{
-
-    font-weight:700;
-
+.yatrik-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-4px);
 }
 
-
-
-.card .btn{
-
-    border-radius:30px;
-
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
 }
 
-
-
-/* =========================
- Sections
-========================= */
-
-
-section{
-
-    padding-top:70px;
-    padding-bottom:70px;
-
+/* Badges */
+.verified-badge {
+  background-color: var(--sage);
+  color: white;
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
-
-
-h2{
-
-    font-weight:800;
-
+.verification-pending {
+  background-color: var(--gold);
+  color: var(--text-primary);
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
-
-/* =========================
- Footer
-========================= */
-
-
-footer{
-
-    background:#111827!important;
-
+/* Empty States */
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  background: white;
+  border-radius: var(--radius);
+  border: 1px dashed var(--border);
+  color: var(--text-muted);
 }
 
-
-
-footer h5{
-
-    color:#ffc107;
-
+.empty-state i {
+  font-size: 3rem;
+  color: var(--saffron-light);
+  margin-bottom: 1rem;
 }
 
+.empty-state h3 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
 
-/* Mobile Responsive */
+/* Partner Dashboard */
+.partner-dashboard {
+  display: grid;
+  gap: 1.5rem;
+}
 
-@media(max-width:768px){
+/* Completion Bar */
+.completion-bar-container {
+  height: 8px;
+  background-color: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
 
+.completion-bar {
+  height: 100%;
+  background-color: var(--saffron);
+  transition: width 0.3s ease;
+}
 
-    .hero h1{
+/* Journey Step */
+.journey-steps-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 2rem 0;
+  overflow-x: auto;
+}
 
-        font-size:2.5rem;
+.journey-steps-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--border);
+  z-index: 1;
+}
 
-    }
+.journey-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  background: var(--cream);
+  padding: 0 1rem;
+}
 
+.journey-step .icon-wrapper {
+  width: 48px;
+  height: 48px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--saffron);
+  color: var(--saffron);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
 
-    .hero p{
+.journey-step span {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
 
-        font-size:1rem;
+/* Circuit City Card */
+.circuit-city-card {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  height: 250px;
+}
 
-    }
+.circuit-city-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
+.circuit-city-card .overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  color: white;
+}
 
+.circuit-city-card h3 {
+  margin: 0;
+  color: white;
+}
+
+/* Food Trail Stop */
+.food-trail-stop {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.food-trail-stop .number-badge {
+  width: 32px;
+  height: 32px;
+  background-color: var(--maroon);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* Forms */
+.form-control, .form-select {
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--saffron);
+  box-shadow: 0 0 0 3px var(--saffron-light);
+}
+
+/* Interactive hover */
+.interactive-element {
+  transition: all 0.2s ease;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+  .custom-navbar .navbar-collapse {
+    background-color: var(--text-primary);
+    padding: 1rem;
+    border-radius: var(--radius);
+    margin-top: 0.5rem;
+  }
+  body { padding-top: 60px; }
 }

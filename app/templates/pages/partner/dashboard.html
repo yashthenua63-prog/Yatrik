@@ -1,0 +1,134 @@
+{% extends "layouts/base.html" %}
+
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-1">Partner Dashboard</h1>
+            <p class="text-muted">Welcome back, {{ current_user.name }}</p>
+        </div>
+        <div>
+            <a href="/support" class="btn btn-outline-secondary btn-sm"><i class="bi bi-headset"></i> Support</a>
+        </div>
+    </div>
+
+    <!-- Hotels Section -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">My Hotels</h3>
+            <a href="/partner/hotel/add" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Add Hotel</a>
+        </div>
+        
+        {% if hotels %}
+        <div class="row g-4">
+            {% for hotel in hotels %}
+            <div class="col-md-6 col-lg-4">
+                <div class="yatrik-card p-3 h-100 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="mb-0">{{ hotel.name }}</h5>
+                        {% if hotel.is_verified %}
+                        <span class="verified-badge"><i class="bi bi-shield-check"></i> Verified</span>
+                        {% else %}
+                        <span class="verification-pending"><i class="bi bi-clock"></i> Pending</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-muted small mb-3"><i class="bi bi-geo-alt"></i> {{ hotel.city }}</p>
+                    
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>Profile Completion</span>
+                            <span>{{ hotel_completions.get(hotel.id, 0) }}%</span>
+                        </div>
+                        <div class="completion-bar-container mb-3">
+                            <div class="completion-bar" style="width: {{ hotel_completions.get(hotel.id, 0) }}%;"></div>
+                        </div>
+                        <a href="/partner/hotel/{{ hotel.id }}/edit" class="btn btn-outline-dark w-100 btn-sm">Edit Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state p-4">
+            <i class="bi bi-building"></i>
+            <h4>No Hotels Listed</h4>
+            <p>Start receiving bookings by listing your property.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Restaurants Section -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">My Restaurants</h3>
+            <a href="/partner/restaurant/add" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Add Restaurant</a>
+        </div>
+        
+        {% if restaurants %}
+        <div class="row g-4">
+            {% for restaurant in restaurants %}
+            <div class="col-md-6 col-lg-4">
+                <div class="yatrik-card p-3 h-100 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="mb-0">{{ restaurant.name }}</h5>
+                        {% if restaurant.is_verified %}
+                        <span class="verified-badge"><i class="bi bi-shield-check"></i> Verified</span>
+                        {% else %}
+                        <span class="verification-pending"><i class="bi bi-clock"></i> Pending</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-muted small mb-3"><i class="bi bi-geo-alt"></i> {{ restaurant.city }}</p>
+                    
+                    <div class="mt-auto">
+                        <a href="/partner/restaurant/{{ restaurant.id }}/edit" class="btn btn-outline-dark w-100 btn-sm">Edit Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state p-4">
+            <i class="bi bi-shop"></i>
+            <h4>No Restaurants Listed</h4>
+            <p>Showcase your menu to hungry pilgrims.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Driver Section -->
+    <div class="mb-5">
+        <h3 class="mb-3">Driver Profile</h3>
+        {% if driver %}
+        <div class="yatrik-card p-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">Vehicle: {{ driver.vehicle_model }} ({{ driver.vehicle_number }})</h5>
+                    <p class="text-muted mb-0">Experience: {{ driver.experience_years }} years</p>
+                </div>
+                <div>
+                    {% if driver.is_verified %}
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="driverStatus" {% if driver.is_active %}checked{% endif %}>
+                            <label class="form-check-label" for="driverStatus">Available for Rides</label>
+                        </div>
+                        <span class="verified-badge"><i class="bi bi-shield-check"></i> Verified Driver</span>
+                    {% else %}
+                        <span class="verification-pending"><i class="bi bi-clock"></i> Verification Pending</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state p-4">
+            <i class="bi bi-car-front"></i>
+            <h4>Become a Yatrik Driver</h4>
+            <p>Earn more by driving pilgrims across the Braj circuit.</p>
+            <a href="/partner/driver/register" class="btn btn-outline-dark">Register as Driver</a>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

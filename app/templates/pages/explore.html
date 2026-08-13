@@ -1,0 +1,79 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Explore Braj & Vrindavan | Yatrik
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">🗺️ Explore Braj</h1>
+        <p class="lead text-muted">Discover the spiritual heart of Vrindavan and beyond.</p>
+    </div>
+
+    <!-- Categories Filter -->
+    <div class="d-flex justify-content-center gap-2 flex-wrap mb-5">
+        <button class="btn btn-primary rounded-pill px-4 filter-btn" data-filter="all">All</button>
+        <button class="btn btn-outline-primary rounded-pill px-4 filter-btn" data-filter="Popular Temples">Popular Temples</button>
+        {% for cat in categories %}
+        <button class="btn btn-outline-primary rounded-pill px-4 filter-btn" data-filter="{{ cat.name }}">{{ cat.name }}</button>
+        {% endfor %}
+    </div>
+
+    {% for category_name, items in explore_data.items() %}
+    <div class="category-section mb-5" data-category="{{ category_name }}">
+        <h2 class="h3 mb-4 fw-bold border-bottom pb-2">{{ category_name }}</h2>
+        <div class="row g-4">
+            {% for item in items %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <img src="/static/images/{{ item.image }}" class="card-img-top object-fit-cover" style="height: 200px;" alt="{{ item.name }}">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="h5 fw-bold mb-1">
+                            {% if item.__tablename__ == 'temples' %}🛕{% else %}📍{% endif %} {{ item.name }}
+                        </h3>
+                        <p class="text-muted small mb-3">📍 {{ item.city }}</p>
+                        <p class="card-text small text-muted flex-grow-1">
+                            {{ item.description[:100] + '...' if item.description else 'Explore this sacred destination.' }}
+                        </p>
+                        <a href="{% if item.__tablename__ == 'temples' %}/temples/{{ item.id }}{% else %}/places/{{ item.slug }}{% endif %}" class="btn btn-sm btn-outline-success mt-3">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const sections = document.querySelectorAll('.category-section');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active state
+            filterBtns.forEach(b => {
+                b.classList.remove('btn-primary');
+                b.classList.add('btn-outline-primary');
+            });
+            btn.classList.remove('btn-outline-primary');
+            btn.classList.add('btn-primary');
+
+            // Filter sections
+            const filter = btn.dataset.filter;
+            sections.forEach(sec => {
+                if (filter === 'all' || sec.dataset.category === filter) {
+                    sec.style.display = 'block';
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

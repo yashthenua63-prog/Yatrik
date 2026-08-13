@@ -1,0 +1,56 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Temples of Braj - Yatrik{% endblock %}
+{% block page_class %}temples-page{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-md-8">
+            <h1 class="display-4 fw-bold">Temples of Braj</h1>
+            <p class="lead text-muted">Explore the divine abodes of Lord Krishna across Vrindavan, Mathura, and beyond.</p>
+        </div>
+        <div class="col-md-4">
+            <form action="/search" method="GET" class="d-flex">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" name="q" placeholder="Search temples...">
+                    <button class="btn btn-orange" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if temples %}
+    <div class="row g-4">
+        {% for temple in temples %}
+        <div class="col-md-6 col-lg-4">
+            <a href="/temples/{{ temple.id }}" class="text-decoration-none">
+                <div class="yatrik-card h-100">
+                    <img src="{{ temple.image_url or url_for('static', filename='images/default_temple.jpg') }}" class="card-img-top" alt="{{ temple.name }}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h4 class="card-title text-dark mb-0">{{ temple.name }}</h4>
+                        </div>
+                        <p class="text-muted small mb-2"><i class="bi bi-geo-alt"></i> {{ temple.city }}</p>
+                        
+                        <div class="d-flex flex-column gap-1 small mt-3">
+                            <div class="text-secondary"><i class="bi bi-sunrise"></i> Morning: {{ temple.morning_darshan|default('Varied') }}</div>
+                            <div class="text-secondary"><i class="bi bi-sunset"></i> Evening: {{ temple.evening_darshan|default('Varied') }}</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="bi bi-search"></i>
+        <h3>No Temples Found</h3>
+        <p>We couldn't find any temples matching your criteria. Please try a different search or check back later.</p>
+        <a href="/temples" class="btn btn-outline-dark mt-3">Clear Search</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

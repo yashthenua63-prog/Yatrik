@@ -1,0 +1,15 @@
+{% extends "layouts/base.html" %}
+
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-5 text-center">
+    <div class="mb-4">
+        <i class="bi bi-shield-lock display-1 text-muted"></i>
+    </div>
+    <h1 class="display-3 fw-bold mb-3">403</h1>
+    <h2 class="h3 mb-4">Access Denied</h2>
+    <p class="lead text-muted mb-5">You do not have permission to view this page. If you are a partner, please ensure you are logged in correctly.</p>
+    <a href="/" class="btn btn-orange px-4 py-2">Return Home</a>
+</div>
+{% endblock %}

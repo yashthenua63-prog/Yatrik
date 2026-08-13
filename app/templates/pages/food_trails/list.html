@@ -1,0 +1,41 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Braj Food Trails</h1>
+        <p class="lead text-muted">Discover the famous satvik flavors, pedas, and lassis across the sacred cities.</p>
+    </div>
+
+    {% if trails %}
+    <div class="row g-4">
+        {% for trail in trails %}
+        <div class="col-md-6 col-lg-4">
+            <a href="/food-trails/{{ trail.id }}" class="text-decoration-none">
+                <div class="yatrik-card h-100">
+                    <img src="{{ trail.image_url or url_for('static', filename='images/default_food_trail.jpg') }}" class="card-img-top" alt="{{ trail.title }}">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h4 class="card-title text-dark mb-0">{{ trail.title }}</h4>
+                        </div>
+                        <p class="text-muted small mb-2"><i class="bi bi-geo-alt"></i> {{ trail.city }}</p>
+                        <p class="text-secondary small mb-3">{{ trail.description[:100] }}...</p>
+                        
+                        <div class="mt-auto pt-3 border-top">
+                            <span class="text-primary fw-bold"><i class="bi bi-shop"></i> {{ trail.stops|length }} Stops</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="bi bi-egg-fried"></i>
+        <h3>Coming Soon</h3>
+        <p>We are curating the best food trails in Braj. Stay tuned!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

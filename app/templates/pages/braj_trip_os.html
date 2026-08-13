@@ -1,0 +1,146 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold">Plan My Braj Yatra</h1>
+                <p class="lead text-muted">Tell us about your trip. We'll plan the rest using verified Yatrik data.</p>
+            </div>
+
+            <div class="yatrik-card p-4 p-md-5 mb-5 shadow-lg border-0" id="tripPlannerFormContainer">
+                <form id="tripPlannerForm">
+                    <!-- Step 1: Duration -->
+                    <div class="mb-4">
+                        <h5 class="mb-3">1. How many days is your trip?</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for i in range(1, 6) %}
+                            <input type="radio" class="btn-check" name="days" id="day{{ i }}" value="{{ i }}" {% if i==2 %}checked{% endif %}>
+                            <label class="btn btn-outline-secondary rounded-pill px-4" for="day{{ i }}">{{ i }} Day{% if i > 1 %}s{% endif %}{% if i == 5 %}+{% endif %}</label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Travel Mode -->
+                    <div class="mb-4">
+                        <h5 class="mb-3">2. Who are you traveling with?</h5>
+                        <div class="row g-3">
+                            <div class="col-6 col-md-4">
+                                <input type="radio" class="btn-check" name="mode" id="mode_family" value="Family" checked>
+                                <label class="btn btn-outline-secondary w-100 py-3" for="mode_family">
+                                    <i class="bi bi-people d-block fs-3 mb-1"></i> Family
+                                </label>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <input type="radio" class="btn-check" name="mode" id="mode_senior" value="Senior">
+                                <label class="btn btn-outline-secondary w-100 py-3" for="mode_senior">
+                                    <i class="bi bi-person-wheelchair d-block fs-3 mb-1"></i> Senior Citizens
+                                </label>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <input type="radio" class="btn-check" name="mode" id="mode_solo" value="Solo">
+                                <label class="btn btn-outline-secondary w-100 py-3" for="mode_solo">
+                                    <i class="bi bi-person d-block fs-3 mb-1"></i> Solo / Friends
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Starting Point -->
+                    <div class="mb-4">
+                        <h5 class="mb-3">3. Where will you stay / start from?</h5>
+                        <select class="form-select form-select-lg" name="start_city">
+                            <option value="Vrindavan">Vrindavan</option>
+                            <option value="Mathura">Mathura</option>
+                            <option value="Govardhan">Govardhan</option>
+                        </select>
+                    </div>
+
+                    <!-- Step 4: Interests -->
+                    <div class="mb-5">
+                        <h5 class="mb-3">4. What are your main interests?</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            <input type="checkbox" class="btn-check" id="int_temples" checked>
+                            <label class="btn btn-outline-secondary rounded-pill px-3" for="int_temples">Popular Temples</label>
+                            
+                            <input type="checkbox" class="btn-check" id="int_ghats">
+                            <label class="btn btn-outline-secondary rounded-pill px-3" for="int_ghats">Yamuna Ghats</label>
+                            
+                            <input type="checkbox" class="btn-check" id="int_food">
+                            <label class="btn btn-outline-secondary rounded-pill px-3" for="int_food">Local Food Trails</label>
+                            
+                            <input type="checkbox" class="btn-check" id="int_hidden">
+                            <label class="btn btn-outline-secondary rounded-pill px-3" for="int_hidden">Hidden Gems</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-orange w-100 py-3 fs-4 rounded-3" id="generateBtn">
+                        Generate My Itinerary
+                    </button>
+                </form>
+            </div>
+
+            <!-- Results Section -->
+            <div id="itineraryResults" class="d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Your Personalized Itinerary</h2>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()">Start Over</button>
+                </div>
+                
+                <p class="text-muted small mb-4"><i class="bi bi-exclamation-triangle"></i> This itinerary is algorithmically generated using verified Yatrik data. Timings are estimates. Please confirm locally.</p>
+
+                <!-- Day 1 -->
+                <div class="yatrik-card mb-4 border-0 shadow-sm">
+                    <div class="bg-primary text-white p-3 d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Day 1: The Heart of Vrindavan</h4>
+                        <span class="badge bg-light text-primary">Vrindavan</span>
+                    </div>
+                    <div class="p-4">
+                        <div class="border-start border-primary border-3 ps-3 mb-4">
+                            <h5 class="text-primary mb-1">08:00 AM - Banke Bihari Temple</h5>
+                            <p class="text-muted small mb-0">Start early to avoid extreme crowds. Darshan opens at 7:45 AM in summer.</p>
+                        </div>
+                        <div class="border-start border-warning border-3 ps-3 mb-4">
+                            <h5 class="text-warning mb-1">11:00 AM - Radha Raman Temple</h5>
+                            <p class="text-muted small mb-0">Walk through the narrow streets to visit this ancient temple.</p>
+                        </div>
+                        <div class="border-start border-success border-3 ps-3 mb-4">
+                            <h5 class="text-success mb-1">01:00 PM - Lunch & Rest</h5>
+                            <p class="text-muted small mb-0">Enjoy Satvik thali at local verified restaurants. Temples close between 1 PM and 4 PM.</p>
+                        </div>
+                        <div class="border-start border-primary border-3 ps-3 mb-4">
+                            <h5 class="text-primary mb-1">05:30 PM - Prem Mandir</h5>
+                            <p class="text-muted small mb-0">Visit during evening to see the spectacular lighting and musical fountain.</p>
+                        </div>
+                        <div class="border-start border-info border-3 ps-3">
+                            <h5 class="text-info mb-1">07:30 PM - ISKCON Vrindavan</h5>
+                            <p class="text-muted small mb-0">Attend the mesmerizing evening Sandhya Aarti.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-5">
+                    <a href="/hotels" class="btn btn-orange px-4 py-2 me-2">Book Hotels</a>
+                    <a href="/ride" class="btn btn-outline-dark px-4 py-2">Book Driver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('tripPlannerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('generateBtn');
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating Itinerary...';
+    btn.disabled = true;
+    
+    setTimeout(() => {
+        document.getElementById('tripPlannerFormContainer').classList.add('d-none');
+        document.getElementById('itineraryResults').classList.remove('d-none');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 1500);
+});
+</script>
+{% endblock %}

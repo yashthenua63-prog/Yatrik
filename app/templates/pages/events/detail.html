@@ -1,0 +1,69 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container my-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/events">Events</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ event.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <img src="{{ event.image_url or url_for('static', filename='images/default_event_large.jpg') }}" class="img-fluid rounded-4 w-100 mb-4" alt="{{ event.title }}" style="max-height: 500px; object-fit: cover;">
+            
+            <h1 class="display-5 fw-bold mb-3">{{ event.title }}</h1>
+            
+            <div class="d-flex flex-wrap gap-3 mb-4">
+                <span class="badge bg-light text-dark border p-2"><i class="bi bi-calendar"></i> {{ event.date }}</span>
+                <span class="badge bg-light text-dark border p-2"><i class="bi bi-geo-alt"></i> {{ event.city }}</span>
+                {% if event.hindu_calendar_name %}
+                <span class="badge bg-warning text-dark p-2"><i class="bi bi-moon-stars"></i> {{ event.hindu_calendar_name }}</span>
+                {% endif %}
+            </div>
+
+            <div class="yatrik-card p-4 mb-4">
+                <h4 class="mb-3">About the Festival</h4>
+                <p style="white-space: pre-line;">{{ event.description }}</p>
+            </div>
+            
+            {% if event.travel_info or event.special_notes %}
+            <div class="row g-4 mb-4">
+                {% if event.travel_info %}
+                <div class="col-md-6">
+                    <div class="yatrik-card p-4 h-100 bg-light border-0">
+                        <h5 class="text-primary"><i class="bi bi-info-circle"></i> Travel Info</h5>
+                        <p class="mb-0 small">{{ event.travel_info }}</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if event.special_notes %}
+                <div class="col-md-6">
+                    <div class="yatrik-card p-4 h-100 bg-light border-0">
+                        <h5 class="text-danger"><i class="bi bi-exclamation-triangle"></i> Special Notes</h5>
+                        <p class="mb-0 small">{{ event.special_notes }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <a href="/events" class="btn btn-outline-dark"><i class="bi bi-arrow-left"></i> Back to Events</a>
+        </div>
+        
+        <div class="col-lg-4 mt-5 mt-lg-0">
+            <div class="yatrik-card p-4 sticky-top" style="top: 100px;">
+                <h4 class="mb-3">Plan Your Visit</h4>
+                <p class="text-muted small mb-4">Need help planning your trip for {{ event.title }}?</p>
+                
+                <a href="/plan-my-trip" class="btn btn-orange w-100 mb-2">Create Itinerary</a>
+                <a href="/hotels?city={{ event.city }}" class="btn btn-outline-dark w-100 mb-2">Find Stays in {{ event.city }}</a>
+                <a href="/ride" class="btn btn-outline-dark w-100">Book Local Transport</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

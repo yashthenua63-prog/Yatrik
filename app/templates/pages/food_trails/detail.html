@@ -1,0 +1,46 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container my-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/food-trails">Food Trails</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ trail.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <img src="{{ trail.image_url or url_for('static', filename='images/default_food_trail_large.jpg') }}" class="img-fluid rounded-4 w-100 mb-4" alt="{{ trail.title }}" style="max-height: 400px; object-fit: cover;">
+            
+            <div class="text-center mb-5">
+                <span class="badge bg-warning text-dark mb-2"><i class="bi bi-geo-alt"></i> {{ trail.city }}</span>
+                <h1 class="display-5 fw-bold mb-3">{{ trail.title }}</h1>
+                <p class="lead text-muted">{{ trail.description }}</p>
+            </div>
+
+            <div class="trail-stops mt-5">
+                <h3 class="mb-4 text-center border-bottom pb-2">The Trail Stops</h3>
+                
+                {% for stop in trail.stops %}
+                <div class="food-trail-stop align-items-start p-3 bg-white rounded-3 shadow-sm border mb-3">
+                    <div class="number-badge">{{ loop.index }}</div>
+                    <div class="flex-grow-1">
+                        <h4 class="mb-1 text-primary">{{ stop.restaurant_name }}</h4>
+                        {% if stop.address %}
+                        <p class="small text-muted mb-2"><i class="bi bi-geo-alt"></i> {{ stop.address }}</p>
+                        {% endif %}
+                        <p class="mb-0 text-dark">{{ stop.notes }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="/food-trails" class="btn btn-outline-dark">Explore More Trails</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

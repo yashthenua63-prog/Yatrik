@@ -1,0 +1,168 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Book a Ride | Yatrik
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 fw-bold">🛺 Request a Ride</h1>
+                        <p class="text-muted">Find an e-rickshaw or auto in Vrindavan.</p>
+                    </div>
+
+                    <div id="ride-form-container">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Pickup Location</label>
+                            <input type="text" id="pickup" class="form-control form-control-lg" placeholder="e.g. Banke Bihari Temple" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Destination</label>
+                            <input type="text" id="destination" class="form-control form-control-lg" placeholder="e.g. ISKCON Temple" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Vehicle Type</label>
+                            <select id="vehicle_type" class="form-select form-select-lg">
+                                <option value="E-Rickshaw">E-Rickshaw</option>
+                                <option value="Auto">Auto Rickshaw</option>
+                            </select>
+                        </div>
+
+                        <!-- For MVP, we mock distance. In production this would use Google Maps Distance Matrix API -->
+                        <div class="alert alert-light border d-flex justify-content-between align-items-center mb-4" id="estimate-box">
+                            <div>
+                                <small class="text-muted d-block">Estimated Distance</small>
+                                <strong>~2.5 km</strong>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted d-block">Estimated Fare</small>
+                                <strong class="fs-5 text-success" id="fare-amount">₹45.00</strong>
+                            </div>
+                        </div>
+
+                        <button id="request-btn" class="btn btn-primary btn-lg w-100 fw-bold py-3" onclick="requestRide()">
+                            Request Ride
+                        </button>
+                    </div>
+                    
+                    <!-- Status Screens -->
+                    <div id="ride-status-container" style="display: none;" class="text-center py-4">
+                        <div id="status-icon" class="mb-3">
+                            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+                        </div>
+                        <h2 id="status-title" class="h4 fw-bold">Finding a Driver...</h2>
+                        <p id="status-message" class="text-muted mb-4">Connecting you with nearby drivers.</p>
+                        
+                        <div id="driver-details" style="display: none;" class="card bg-light border-0 mb-4 text-start">
+                            <div class="card-body">
+                                <h5 class="fw-bold mb-1" id="driver-name">Driver Name</h5>
+                                <p class="text-muted mb-0">Vehicle: <span id="driver-vehicle" class="fw-bold text-dark">XX-00-0000</span></p>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-outline-secondary w-100" onclick="resetForm()">New Request</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Mock estimate calculation for MVP
+document.getElementById("vehicle_type").addEventListener("change", updateEstimate);
+
+function updateEstimate() {
+    // In production, call /api/ride/estimate
+    const type = document.getElementById("vehicle_type").value;
+    const distance = 2.5; // Mock 2.5 km
+    
+    fetch("/api/ride/estimate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ distance_km: distance, vehicle_type: type })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.estimated_fare) {
+            document.getElementById("fare-amount").innerText = "₹" + data.estimated_fare;
+        }
+    })
+    .catch(console.error);
+}
+
+function requestRide() {
+    const pickup = document.getElementById("pickup").value.trim();
+    const destination = document.getElementById("destination").value.trim();
+    
+    if(!pickup || !destination) {
+        alert("Please enter pickup and destination.");
+        return;
+    }
+    
+    document.getElementById("ride-form-container").style.display = "none";
+    document.getElementById("ride-status-container").style.display = "block";
+    
+    const fareText = document.getElementById("fare-amount").innerText.replace("₹", "");
+    
+    fetch("/api/ride/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            pickup: pickup,
+            destination: destination,
+            distance_km: 2.5,
+            estimated_fare: parseFloat(fareText)
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const icon = document.getElementById("status-icon");
+        const title = document.getElementById("status-title");
+        const msg = document.getElementById("status-message");
+        const details = document.getElementById("driver-details");
+        
+        if (data.status === "ACCEPTED") {
+            icon.innerHTML = '<i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>';
+            title.innerText = "Ride Confirmed!";
+            msg.innerText = "Your driver is on the way.";
+            
+            document.getElementById("driver-name").innerText = data.driver_name;
+            document.getElementById("driver-vehicle").innerText = data.vehicle_number;
+            details.style.display = "block";
+        } else {
+            // NO_DRIVER_AVAILABLE
+            icon.innerHTML = '<i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 4rem;"></i>';
+            title.innerText = "No Driver Available";
+            msg.innerText = data.message;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        document.getElementById("status-title").innerText = "Error";
+        document.getElementById("status-message").innerText = "An error occurred. Please try again.";
+        document.getElementById("status-icon").innerHTML = '<i class="bi bi-x-circle-fill text-danger" style="font-size: 4rem;"></i>';
+    });
+}
+
+function resetForm() {
+    document.getElementById("ride-status-container").style.display = "none";
+    document.getElementById("driver-details").style.display = "none";
+    document.getElementById("ride-form-container").style.display = "block";
+    
+    // Reset icon to spinner
+    document.getElementById("status-icon").innerHTML = '<div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>';
+    document.getElementById("status-title").innerText = "Finding a Driver...";
+    document.getElementById("status-message").innerText = "Connecting you with nearby drivers.";
+}
+
+// Initial estimate load
+updateEstimate();
+</script>
+{% endblock %}

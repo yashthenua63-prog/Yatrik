@@ -1,27 +1,64 @@
-<footer class="bg-dark text-white text-center py-4 mt-5">
-
+<footer class="pt-5 pb-3 text-white" style="background-color: var(--text-primary);">
     <div class="container">
+        <div class="row mb-4">
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <h3 class="fw-bold mb-3" style="color: var(--saffron);">🛕 Yatrik</h3>
+                <p class="text-light opacity-75">Your trusted digital guide for the Braj region. Discover temples, plan darshans, and experience the spiritual essence of Vrindavan and Mathura.</p>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                <h5 class="mb-3 text-white">Discover</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/temples" class="text-light text-decoration-none opacity-75 custom-hover">Temples</a></li>
+                    <li class="mb-2"><a href="/explore" class="text-light text-decoration-none opacity-75 custom-hover">Places</a></li>
+                    <li class="mb-2"><a href="/explore" class="text-light text-decoration-none opacity-75 custom-hover">Explore</a></li>
+                    <li class="mb-2"><a href="/events" class="text-light text-decoration-none opacity-75 custom-hover">Events</a></li>
+                </ul>
+            </div>
 
-        <h5 class="fw-bold">
-            🛕 Yatrik
-        </h5>
+            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                <h5 class="mb-3 text-white">Plan</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/plan-my-trip" class="text-light text-decoration-none opacity-75 custom-hover">Trip Planner</a></li>
+                    <li class="mb-2"><a href="/darshan-planner" class="text-light text-decoration-none opacity-75 custom-hover">Darshan Planner</a></li>
+                    <li class="mb-2"><a href="/braj-circuit" class="text-light text-decoration-none opacity-75 custom-hover">Braj Circuit</a></li>
+                    <li class="mb-2"><a href="/food-trails" class="text-light text-decoration-none opacity-75 custom-hover">Food Trails</a></li>
+                </ul>
+            </div>
 
+            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                <h5 class="mb-3 text-white">Partners</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/register?type=PARTNER" class="text-light text-decoration-none opacity-75 custom-hover">List Hotel</a></li>
+                    <li class="mb-2"><a href="/register?type=PARTNER" class="text-light text-decoration-none opacity-75 custom-hover">List Restaurant</a></li>
+                    <li class="mb-2"><a href="/register?type=PARTNER" class="text-light text-decoration-none opacity-75 custom-hover">Become Driver</a></li>
+                </ul>
+            </div>
 
-        <p class="mb-2">
-            AI Powered Pilgrimage Companion
-        </p>
-
-
-        <p class="text-white-50">
-            Discover temples, timings and divine places of Braj.
-        </p>
-
-
-        <small>
-            © 2026 Yatrik. All Rights Reserved.
-        </small>
-
-
+            <div class="col-lg-2 col-md-4">
+                <h5 class="mb-3 text-white">Info</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/about" class="text-light text-decoration-none opacity-75 custom-hover">About</a></li>
+                    <li class="mb-2"><a href="/safety" class="text-light text-decoration-none opacity-75 custom-hover">Safety</a></li>
+                    <li class="mb-2"><a href="/privacy" class="text-light text-decoration-none opacity-75 custom-hover">Privacy</a></li>
+                    <li class="mb-2"><a href="/terms" class="text-light text-decoration-none opacity-75 custom-hover">Terms</a></li>
+                    <li class="mb-2"><a href="/support" class="text-light text-decoration-none opacity-75 custom-hover">Support</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <hr class="border-secondary mb-3">
+        
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <p class="mb-0 small text-light opacity-50">&copy; {{ moment().format('YYYY') if moment else '2026' }} Yatrik. All rights reserved.</p>
+            <p class="mb-0 small text-light opacity-50">Made with <span class="text-danger">❤️</span> for Braj</p>
+        </div>
     </div>
-
 </footer>
+
+<style>
+.custom-hover:hover {
+    opacity: 1 !important;
+    color: var(--saffron) !important;
+}
+</style>

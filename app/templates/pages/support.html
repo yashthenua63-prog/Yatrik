@@ -1,0 +1,70 @@
+{% extends "layouts/base.html" %}
+
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="text-center mb-4">
+                <h1 class="display-5 fw-bold">Get Support</h1>
+                <p class="text-muted">Need help with Yatrik? Send us a message.</p>
+            </div>
+
+            <div class="yatrik-card p-4 p-md-5 shadow-sm">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="/support">
+                    {% if not current_user.is_authenticated %}
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Name *</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email *</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Category *</label>
+                        <select class="form-select" name="category" required>
+                            <option value="General Inquiry">General Inquiry</option>
+                            <option value="Partner Support (Hotel/Driver)">Partner Support (Hotel/Driver)</option>
+                            <option value="Bug Report">Report a Bug / Incorrect Info</option>
+                            <option value="Feedback">Feedback</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Subject *</label>
+                        <input type="text" class="form-control" name="subject" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Message *</label>
+                        <textarea class="form-control" name="message" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-orange w-100 py-2">Send Message</button>
+                </form>
+            </div>
+            
+            <div class="text-center mt-5 text-muted small">
+                <p>We typically reply within 24-48 hours.<br>For urgent matters, please contact local authorities.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

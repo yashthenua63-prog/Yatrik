@@ -12,619 +12,320 @@ Explore {{ temple.name }} in Vrindavan with Yatrik. Check darshan timings, curre
 https://yatrik-rw1u.onrender.com/temples/{{ temple.id }}
 {% endblock %}
 
-{% block og_title %}
-{{ temple.name }} Vrindavan – Darshan, Weather & Guide | Yatrik
-{% endblock %}
-
-{% block og_description %}
-Check {{ temple.name }} darshan timings, current weather, weather alerts, temple information and nearby temples with Yatrik.
-{% endblock %}
-
-{% block og_url %}
-https://yatrik-rw1u.onrender.com/temples/{{ temple.id }}
-{% endblock %}
-
 {% block content %}
 
-<!-- ===================================================== -->
-<!-- TEMPLE IMAGE -->
-<!-- ===================================================== -->
+<div class="container py-4">
 
-<div class="mb-4">
-    <img
-        src="{{ url_for('static', filename='images/' + temple.image) }}"
-        class="img-fluid rounded shadow"
-        style="height:450px;width:100%;object-fit:cover;"
-        alt="{{ temple.name }} Vrindavan"
-    >
+    <!-- =========================
+         HERO SECTION
+    ========================== -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="temple-main-image position-relative">
+                <img
+                    src="{{ url_for('static', filename='images/' + temple.image) }}"
+                    class="img-fluid rounded shadow-lg w-100 object-fit-cover"
+                    style="height: 400px;"
+                    alt="{{ temple.name }} Vrindavan"
+                    loading="eager"
+                >
+                <div class="position-absolute top-0 end-0 p-3">
+                    <button class="btn btn-light shadow-sm rounded-circle" onclick="savePlace({{ temple.id }}, 'temple')" title="Save Temple">
+                        <i class="bi bi-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="ps-lg-4">
+                <h1 class="display-4 fw-bold mb-2">🛕 {{ temple.name }}</h1>
+                <p class="lead text-muted mb-4">📍 {{ temple.city }}</p>
+                
+                <p class="mb-4">
+                    {{ temple.description[:200] }}...
+                </p>
+
+                <!-- Status Card -->
+                <div class="card bg-light border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            {% if status.status == "Open Now" %}
+                                <span class="badge bg-success fs-6 me-2">🟢 {{ status.status }}</span>
+                            {% elif status.status == "Darshan Break" %}
+                                <span class="badge bg-warning text-dark fs-6 me-2">🟠 {{ status.status }}</span>
+                            {% else %}
+                                <span class="badge bg-danger fs-6 me-2">🔴 {{ status.status }}</span>
+                            {% endif %}
+                            <span class="text-muted">{{ status.message }}</span>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Next Darshan</small>
+                                <strong>{{ status.next_darshan }}</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Recommended Arrival</small>
+                                <strong>{{ status.recommended_arrival }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="https://www.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary shadow-sm">
+                        <i class="bi bi-geo-alt"></i> Get Directions
+                    </a>
+                    <a href="#map" class="btn btn-outline-secondary shadow-sm">
+                        <i class="bi bi-map"></i> Map
+                    </a>
+                    <button class="btn btn-outline-success shadow-sm" onclick="addToTripPlanner({{ temple.id }}, 'temple')">
+                        <i class="bi bi-calendar-plus"></i> Plan Visit
+                    </button>
+                    <button class="btn btn-outline-primary shadow-sm" onclick="shareTemple()">
+                        <i class="bi bi-share"></i> Share
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================
+         IMPORTANT INFO
+    ========================== -->
+    <section class="mt-5 mb-5">
+        <h2 class="mb-4">Important Information</h2>
+        <div class="row g-4">
+            
+            <!-- Timings -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100 border-0 bg-light">
+                    <div class="card-body p-4">
+                        <h3 class="h5 mb-4"><i class="bi bi-clock"></i> Darshan Timings</h3>
+                        
+                        <div class="d-flex justify-content-between border-bottom pb-2 mb-3">
+                            <span class="fw-bold">🌅 Morning</span>
+                            <span>{{ temple.morning_open }} - {{ temple.morning_close }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom pb-2 mb-3">
+                            <span class="fw-bold">🌆 Evening</span>
+                            <span>{{ temple.evening_open }} - {{ temple.evening_close }}</span>
+                        </div>
+                        {% if temple.expected_duration %}
+                        <div class="d-flex justify-content-between pt-2">
+                            <span class="text-muted">Expected Duration</span>
+                            <span>{{ temple.expected_duration }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust / Visit Info -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100 border-0 bg-light">
+                    <div class="card-body p-4">
+                        <h3 class="h5 mb-4"><i class="bi bi-info-circle"></i> Visitor Info</h3>
+                        
+                        {% if temple.best_time_to_visit %}
+                        <p><strong>Best time to visit:</strong> {{ temple.best_time_to_visit }}</p>
+                        {% endif %}
+                        
+                        {% if temple.important_notes %}
+                        <p><strong>Notes:</strong> {{ temple.important_notes }}</p>
+                        {% endif %}
+                        
+                        {% if temple.official_website %}
+                        <p>
+                            <strong>Official Website:</strong> 
+                            <a href="{{ temple.official_website }}" target="_blank" rel="noopener noreferrer">Visit Site</a>
+                        </p>
+                        {% endif %}
+                        
+                        <p class="text-muted small mt-3">
+                            <i class="bi bi-shield-check"></i> Information provided by Yatrik. For official updates, please consult temple authorities.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================
+         WEATHER
+    ========================== -->
+    <section class="mt-5 mb-5">
+        <h2 class="mb-3">🌤️ Weather at {{ temple.city }}</h2>
+        
+        {% if weather %}
+            {% if weather_alert %}
+                <div class="alert alert-{{ 'danger' if weather_alert.level == 'danger' else 'warning' if weather_alert.level == 'caution' else 'success' }} shadow-sm">
+                    <h4 class="alert-heading">{{ weather_alert.icon }} {{ weather_alert.title }}</h4>
+                    <p class="mb-2">{{ weather_alert.message }}</p>
+                    <strong>Recommendation:</strong> {{ weather_alert.recommendation }}
+                </div>
+            {% endif %}
+
+            <div class="row g-3 mt-2">
+                <div class="col-6 col-lg-3">
+                    <div class="card shadow-sm h-100 border-0 bg-light">
+                        <div class="card-body text-center">
+                            <div class="fs-1 mb-2">🌡️</div>
+                            <h3 class="fw-bold h4">{{ weather.current.temperature_2m }}°C</h3>
+                            <p class="text-muted small mb-0">Temperature</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="card shadow-sm h-100 border-0 bg-light">
+                        <div class="card-body text-center">
+                            <div class="fs-1 mb-2">💧</div>
+                            <h3 class="fw-bold h4">{{ weather.current.relative_humidity_2m }}%</h3>
+                            <p class="text-muted small mb-0">Humidity</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="card shadow-sm h-100 border-0 bg-light">
+                        <div class="card-body text-center">
+                            <div class="fs-1 mb-2">🌧️</div>
+                            <h3 class="fw-bold h4">
+                                {% set current_hour = weather.current.time[:13] ~ ":00" %}
+                                {% if current_hour in weather.hourly.time %}
+                                    {{ weather.hourly.precipitation_probability[weather.hourly.time.index(current_hour)] }}%
+                                {% else %}
+                                    --
+                                {% endif %}
+                            </h3>
+                            <p class="text-muted small mb-0">Rain Prob.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="card shadow-sm h-100 border-0 bg-light">
+                        <div class="card-body text-center">
+                            <div class="fs-1 mb-2">💨</div>
+                            <h3 class="fw-bold h4">{{ weather.current.wind_speed_10m }} km/h</h3>
+                            <p class="text-muted small mb-0">Wind Speed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-secondary shadow-sm">
+                <i class="bi bi-cloud-slash"></i> Weather information is temporarily unavailable.
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- =========================
+         MAP
+    ========================== -->
+    <section id="map" class="mt-5 mb-5">
+        <h2 class="mb-4">🗺️ Location Map</h2>
+        <div class="card shadow-sm border-0">
+            <div class="ratio ratio-21x9 rounded overflow-hidden">
+                <iframe
+                    src="https://maps.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}&z=16&output=embed"
+                    style="border:0;"
+                    loading="lazy"
+                    allowfullscreen
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================
+         NEARBY TEMPLES
+    ========================== -->
+    <section class="mt-5 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">🛕 Places Near You</h2>
+        </div>
+        <div class="row g-4" id="nearby-container">
+            <div class="col-12 text-center py-4">
+                <div class="spinner-border text-success" role="status"></div>
+                <p class="mt-2 text-muted">Finding nearby places...</p>
+            </div>
+        </div>
+    </section>
+
 </div>
 
-
-<!-- ===================================================== -->
-<!-- TEMPLE NAME -->
-<!-- ===================================================== -->
-
-<h1 class="display-4 fw-bold">
-    🛕 {{ temple.name }}
-</h1>
-
-<p class="lead">
-    📍 {{ temple.city }}
-</p>
-
-
-<!-- ===================================================== -->
-<!-- DARSHAN STATUS -->
-<!-- ===================================================== -->
-
-<section class="mt-4">
-
-    {% if status.status == "Open Now" %}
-
-        <div class="alert alert-success shadow-sm">
-            🟢 <strong>{{ status.status }}</strong>
-            <br>
-            {{ status.message }}
-        </div>
-
-    {% elif status.status == "Darshan Break" %}
-
-        <div class="alert alert-warning shadow-sm">
-            🟠 <strong>{{ status.status }}</strong>
-            <br>
-            {{ status.message }}
-        </div>
-
-    {% else %}
-
-        <div class="alert alert-danger shadow-sm">
-            🔴 <strong>{{ status.status }}</strong>
-            <br>
-            {{ status.message }}
-        </div>
-
-    {% endif %}
-
-</section>
-
-
-<!-- ===================================================== -->
-<!-- WEATHER SECTION -->
-<!-- ===================================================== -->
-
-{% if weather %}
-
-<section class="mt-5">
-
-    <h2 class="mb-3">
-        🌤️ Weather at {{ temple.city }}
-    </h2>
-
-    <!-- WEATHER ALERT -->
-
-    {% if weather_alert %}
-
-        {% if weather_alert.level == "danger" %}
-
-            <div class="alert alert-danger shadow-sm">
-                <h4 class="alert-heading">
-                    {{ weather_alert.icon }}
-                    {{ weather_alert.title }}
-                </h4>
-
-                <p class="mb-2">
-                    {{ weather_alert.message }}
-                </p>
-
-                <strong>
-                    Recommendation:
-                </strong>
-
-                {{ weather_alert.recommendation }}
-            </div>
-
-        {% elif weather_alert.level == "caution" %}
-
-            <div class="alert alert-warning shadow-sm">
-                <h4 class="alert-heading">
-                    {{ weather_alert.icon }}
-                    {{ weather_alert.title }}
-                </h4>
-
-                <p class="mb-2">
-                    {{ weather_alert.message }}
-                </p>
-
-                <strong>
-                    Recommendation:
-                </strong>
-
-                {{ weather_alert.recommendation }}
-            </div>
-
-        {% else %}
-
-            <div class="alert alert-success shadow-sm">
-                <h4 class="alert-heading">
-                    {{ weather_alert.icon }}
-                    {{ weather_alert.title }}
-                </h4>
-
-                <p class="mb-2">
-                    {{ weather_alert.message }}
-                </p>
-
-                <strong>
-                    Recommendation:
-                </strong>
-
-                {{ weather_alert.recommendation }}
-            </div>
-
-        {% endif %}
-
-    {% endif %}
-
-
-    <!-- CURRENT WEATHER -->
-
-    <div class="row g-4 mt-2">
-
-        <!-- Temperature -->
-
-        <div class="col-md-4">
-
-            <div class="card shadow-sm h-100">
-
-                <div class="card-body text-center">
-
-                    <div style="font-size:45px;">
-                        🌡️
-                    </div>
-
-                    <h3 class="fw-bold">
-                        {{ weather.current.temperature_2m }}°C
-                    </h3>
-
-                    <p class="text-muted mb-0">
-                        Temperature
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Feels Like -->
-
-        <div class="col-md-4">
-
-            <div class="card shadow-sm h-100">
-
-                <div class="card-body text-center">
-
-                    <div style="font-size:45px;">
-                        🥵
-                    </div>
-
-                    <h3 class="fw-bold">
-                        {{ weather.current.apparent_temperature }}°C
-                    </h3>
-
-                    <p class="text-muted mb-0">
-                        Feels Like
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Humidity -->
-
-        <div class="col-md-4">
-
-            <div class="card shadow-sm h-100">
-
-                <div class="card-body text-center">
-
-                    <div style="font-size:45px;">
-                        💧
-                    </div>
-
-                    <h3 class="fw-bold">
-                        {{ weather.current.relative_humidity_2m }}%
-                    </h3>
-
-                    <p class="text-muted mb-0">
-                        Humidity
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Rain Probability -->
-
-        <div class="col-md-4">
-
-            <div class="card shadow-sm h-100">
-
-                <div class="card-body text-center">
-
-                    <div style="font-size:45px;">
-                        🌧️
-                    </div>
-
-                    <h3 class="fw-bold">
-
-                        {% set current_time = weather.current.time[:13] ~ ":00" %}
-
-                        {% if current_time in weather.hourly.time %}
-
-                            {{ weather.hourly.precipitation_probability[
-                                weather.hourly.time.index(current_time)
-                            ] }}%
-
-                        {% else %}
-
-                            --
-
-                        {% endif %}
-
-                    </h3>
-
-                    <p class="text-muted mb-0">
-                        Rain Probability
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Wind -->
-
-        <div class="col-md-4">
-
-            <div class="card shadow-sm h-100">
-
-                <div class="card-body text-center">
-
-                    <div style="font-size:45px;">
-                        💨
-                    </div>
-
-                    <h3 class="fw-bold">
-                        {{ weather.current.wind_speed_10m }} km/h
-                    </h3>
-
-                    <p class="text-muted mb-0">
-                        Wind Speed
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Precipitation -->
-
-        <div class="col-md-4">
-
-            <div class="card shadow-sm h-100">
-
-                <div class="card-body text-center">
-
-                    <div style="font-size:45px;">
-                        ☔
-                    </div>
-
-                    <h3 class="fw-bold">
-                        {{ weather.current.precipitation }} mm
-                    </h3>
-
-                    <p class="text-muted mb-0">
-                        Current Rainfall
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-{% endif %}
-
-
-<!-- ===================================================== -->
-<!-- DARSHAN TIMINGS -->
-<!-- ===================================================== -->
-
-<section class="mt-5">
-
-    <h2>
-        {{ temple.name }} Darshan Timings
-    </h2>
-
-    <div class="row g-4 mt-2">
-
-        <!-- Morning -->
-
-        <div class="col-md-6">
-
-            <div class="card shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <h3 class="h5">
-                        🌅 Morning Darshan
-                    </h3>
-
-                    <p class="fs-5 mb-0">
-                        {{ temple.morning_open }}
-                        -
-                        {{ temple.morning_close }}
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Evening -->
-
-        <div class="col-md-6">
-
-            <div class="card shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <h3 class="h5">
-                        🌆 Evening Darshan
-                    </h3>
-
-                    <p class="fs-5 mb-0">
-                        {{ temple.evening_open }}
-                        -
-                        {{ temple.evening_close }}
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ===================================================== -->
-<!-- DIRECTIONS -->
-<!-- ===================================================== -->
-
-<section class="mt-4">
-
-    <a
-        href="https://www.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn btn-success mt-3"
-    >
-        📍 Get Directions
-    </a>
-
-</section>
-
-
-<!-- ===================================================== -->
-<!-- ABOUT TEMPLE -->
-<!-- ===================================================== -->
-
-<section class="mt-5">
-
-    <h2>
-        About {{ temple.name }}
-    </h2>
-
-    <p>
-        {{ temple.description }}
-    </p>
-
-</section>
-
-
-<!-- ===================================================== -->
-<!-- NEARBY TEMPLES -->
-<!-- ===================================================== -->
-
-<section class="mt-5">
-
-    <h2>
-        🛕 Nearby Temples
-    </h2>
-
-    <div
-        class="row g-4"
-        id="nearby-container"
-    >
-    </div>
-
-</section>
-
-
-<!-- ===================================================== -->
-<!-- TEMPLE LOCATION -->
-<!-- ===================================================== -->
-
-<section class="mt-5">
-
-    <h2>
-        🗺️ {{ temple.name }} Temple Location
-    </h2>
-
-    <p>
-        Find {{ temple.name }} in {{ temple.city }} using the map below.
-    </p>
-
-    <div class="ratio ratio-16x9">
-
-        <iframe
-            src="https://maps.google.com/maps?q={{ temple.latitude }},{{ temple.longitude }}&z=16&output=embed"
-            style="border:0;"
-            loading="lazy"
-            allowfullscreen
-            referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
-
-    </div>
-
-</section>
-
-
-<!-- ===================================================== -->
-<!-- SEO CONTENT -->
-<!-- ===================================================== -->
-
-<section class="mt-5 mb-5">
-
-    <h2>
-        Visit {{ temple.name }} in Vrindavan
-    </h2>
-
-    <p>
-        Planning a visit to {{ temple.name }} in Vrindavan?
-        Yatrik provides useful information about Vrindavan temples,
-        darshan timings, current darshan status, live weather,
-        weather alerts, temple locations and nearby sacred places.
-    </p>
-
-    <p>
-        Explore more
-        <a href="/temples">
-            Vrindavan temples
-        </a>
-        and discover important pilgrimage destinations across
-        Vrindavan and Braj.
-    </p>
-
-</section>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-
     const container = document.getElementById("nearby-container");
-
-    if (!container) {
-        return;
-    }
+    if (!container) return;
 
     fetch("/api/temples/{{ temple.id }}/nearby")
         .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to load nearby temples");
-            }
-
+            if (!response.ok) throw new Error("Failed to load nearby places");
             return response.json();
         })
         .then(temples => {
-
             container.innerHTML = "";
-
             if (!temples || temples.length === 0) {
-
-                container.innerHTML = `
-                    <div class="col-12">
-                        <div class="alert alert-info">
-                            No nearby temples found.
-                        </div>
-                    </div>
-                `;
-
+                container.innerHTML = `<div class="col-12"><div class="alert alert-info">No nearby places found.</div></div>`;
                 return;
             }
 
-
             temples.forEach(temple => {
-
                 const card = document.createElement("div");
-
-                card.className = "col-md-4";
-
+                card.className = "col-12 col-md-6 col-lg-4";
                 card.innerHTML = `
-                    <div class="card shadow-sm h-100">
-
-                        <img
-                            src="/static/images/${temple.image}"
-                            class="card-img-top"
-                            style="height:220px; object-fit:cover;"
-                            alt="${temple.name}"
-                        >
-
+                    <div class="card shadow-sm h-100 border-0">
+                        <img src="/static/images/${temple.image}" class="card-img-top" style="height:200px; object-fit:cover;" alt="${temple.name}">
                         <div class="card-body">
-
-                            <h3 class="h5">
-                                🛕 ${temple.name}
-                            </h3>
-
-                            <p class="text-muted">
-                                📍 ${temple.city}
-                            </p>
-
-                            <p>
-                                📏 ${temple.distance} km away
-                            </p>
-
-                            <a
-                                href="/temples/${temple.id}"
-                                class="btn btn-success"
-                            >
-                                View Temple
-                            </a>
-
+                            <h3 class="h5 fw-bold mb-1">${temple.name}</h3>
+                            <p class="text-muted small mb-2">📍 ${temple.city} &bull; 📏 ${temple.distance} km away</p>
+                            <a href="/temples/${temple.id}" class="btn btn-sm btn-outline-success">View Details</a>
                         </div>
-
                     </div>
                 `;
-
                 container.appendChild(card);
-
             });
-
         })
         .catch(error => {
-
-            console.error("Nearby Temples Error:", error);
-
-            container.innerHTML = `
-                <div class="col-12">
-                    <div class="alert alert-danger">
-                        Unable to load nearby temples.
-                    </div>
-                </div>
-            `;
-
+            console.error("Nearby error:", error);
+            container.innerHTML = `<div class="col-12"><div class="alert alert-danger border-0">Unable to load nearby places.</div></div>`;
         });
-
 });
+
+function shareTemple() {
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ temple.name }} - Yatrik',
+            url: window.location.href
+        }).catch(console.error);
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+    }
+}
+
+function savePlace(id, type) {
+    fetch("/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id, type: type })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "saved") {
+            alert("Place saved!");
+        } else {
+            alert("Place removed from saved list.");
+        }
+    })
+    .catch(console.error);
+}
+
+function addToTripPlanner(id, type) {
+    // Basic frontend logic
+    alert("Added to trip planner!");
+}
 </script>
 
 {% endblock %}

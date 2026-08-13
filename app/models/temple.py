@@ -75,11 +75,16 @@ class Temple(db.Model):
         db.Float
     )
 
+    # Added fields for Trust / Info
+    official_website = db.Column(db.String(255))
+    expected_duration = db.Column(db.String(50))
+    best_time_to_visit = db.Column(db.String(100))
+    important_notes = db.Column(db.Text)
 
-    created_at = db.Column(
-        db.DateTime,
-        server_default=db.func.now()
-    )
+
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
+    verification_status = db.Column(db.String(20), default="PUBLISHED")
 
 
     def __repr__(self):

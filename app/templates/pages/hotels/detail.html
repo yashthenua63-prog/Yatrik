@@ -1,0 +1,76 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+{{ hotel.name }} | Yatrik
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            {% if hotel.featured_image %}
+            <img src="/static/images/{{ hotel.featured_image }}" class="img-fluid rounded mb-4 shadow-sm w-100" style="max-height: 400px; object-fit:cover;" alt="{{ hotel.name }}">
+            {% endif %}
+            
+            <div class="d-flex align-items-center mb-2">
+                <h1 class="fw-bold mb-0 me-3">{{ hotel.name }}</h1>
+                {% if hotel.verification_status == 'PUBLISHED' %}
+                <span class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill px-3 py-2">
+                    <i class="bi bi-check-circle-fill me-1"></i> Verified Partner
+                </span>
+                {% endif %}
+            </div>
+            <p class="text-muted fs-5 mb-4">📍 {{ hotel.address }}, {{ hotel.city }}</p>
+            
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h2 class="h4 fw-bold mb-3">About this Stay</h2>
+                    <p>{{ hotel.description }}</p>
+                    
+                    {% if hotel.amenities %}
+                    <h3 class="h5 fw-bold mt-4 mb-2">Amenities</h3>
+                    <p>✨ {{ hotel.amenities }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h3 class="h4 fw-bold mb-3">Booking Details</h3>
+                    
+                    {% if hotel.price_range %}
+                    <p class="fs-5 mb-3"><strong>Price:</strong> {{ hotel.price_range }}</p>
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2 mb-4">
+                        {% if hotel.booking_url %}
+                        <a href="{{ hotel.booking_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">Book Now</a>
+                        {% endif %}
+                        
+                        {% if hotel.phone %}
+                        <a href="tel:{{ hotel.phone }}" class="btn btn-outline-success">📞 {{ hotel.phone }}</a>
+                        {% endif %}
+                        
+                        {% if hotel.official_website %}
+                        <a href="{{ hotel.official_website }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary">Official Website</a>
+                        {% endif %}
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <button class="btn btn-light border w-100 mb-2" onclick="savePlace({{ hotel.id }}, 'hotel')">
+                            <i class="bi bi-bookmark"></i> Save
+                        </button>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ hotel.latitude }},{{ hotel.longitude }}" target="_blank" class="btn btn-light border w-100">
+                            <i class="bi bi-geo-alt"></i> Get Directions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "layouts/base.html" %}
+
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">Edit Hotel Details</h1>
+                <a href="/partner/dashboard" class="btn btn-outline-secondary btn-sm">Cancel</a>
+            </div>
+
+            <div class="yatrik-card p-4">
+                <form method="POST" action="/partner/hotel/{{ hotel.id }}/edit">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Hotel Name *</label>
+                            <input type="text" class="form-control" name="name" value="{{ hotel.name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">City *</label>
+                            <select class="form-select" name="city" required>
+                                <option value="Vrindavan" {% if hotel.city == 'Vrindavan' %}selected{% endif %}>Vrindavan</option>
+                                <option value="Mathura" {% if hotel.city == 'Mathura' %}selected{% endif %}>Mathura</option>
+                                <option value="Govardhan" {% if hotel.city == 'Govardhan' %}selected{% endif %}>Govardhan</option>
+                                <option value="Barsana" {% if hotel.city == 'Barsana' %}selected{% endif %}>Barsana</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Address *</label>
+                            <input type="text" class="form-control" name="address" value="{{ hotel.address }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-control" name="phone" value="{{ hotel.phone }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Price Range</label>
+                            <select class="form-select" name="price_range">
+                                <option value="Budget" {% if hotel.price_range == 'Budget' %}selected{% endif %}>Budget (₹500-1500)</option>
+                                <option value="Mid-Range" {% if hotel.price_range == 'Mid-Range' %}selected{% endif %}>Mid-Range (₹1500-4000)</option>
+                                <option value="Luxury" {% if hotel.price_range == 'Luxury' %}selected{% endif %}>Luxury (₹4000+)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" name="website" value="{{ hotel.website }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Booking URL</label>
+                            <input type="url" class="form-control" name="booking_url" value="{{ hotel.booking_url }}">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Amenities (comma-separated)</label>
+                            <input type="text" class="form-control" name="amenities" value="{{ hotel.amenities }}" placeholder="WiFi, AC, Geyser, Parking">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="description" rows="4">{{ hotel.description }}</textarea>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-orange w-100 py-2">Save Changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

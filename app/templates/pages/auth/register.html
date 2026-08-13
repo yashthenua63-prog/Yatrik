@@ -1,0 +1,84 @@
+{% extends "layouts/base.html" %}
+
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block page_class %}auth-page{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="yatrik-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h1 class="h2 mb-2">Join Yatrik</h1>
+                    <p class="text-muted">Create an account to start exploring</p>
+                </div>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="/register">
+                    <div class="mb-3">
+                        <label class="form-label d-block mb-3">Account Type</label>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="account_type" id="type_traveler" value="TRAVELER" checked>
+                                <label class="btn btn-outline-secondary w-100 h-100 p-3 text-start d-flex flex-column" for="type_traveler">
+                                    <i class="bi bi-compass fs-3 mb-2 text-primary"></i>
+                                    <span class="fw-bold d-block">Traveler</span>
+                                    <span class="small text-muted mt-1">Save places, plan trips</span>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="account_type" id="type_partner" value="PARTNER">
+                                <label class="btn btn-outline-secondary w-100 h-100 p-3 text-start d-flex flex-column" for="type_partner">
+                                    <i class="bi bi-building fs-3 mb-2 text-success"></i>
+                                    <span class="fw-bold d-block">Partner</span>
+                                    <span class="small text-muted mt-1">List hotel, restaurant</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required minlength="6">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-orange w-100 py-2 mb-3">Create Account</button>
+                    
+                    <div class="text-center">
+                        <p class="text-muted small">Already have an account? <a href="/login" class="text-decoration-none fw-bold">Login here</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.btn-check:checked + .btn-outline-secondary {
+    border-color: var(--saffron);
+    background-color: var(--saffron-light);
+    color: var(--text-primary);
+}
+</style>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Restaurants in Braj | Yatrik
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">🍽️ Food in Braj</h1>
+        <p class="lead text-muted">Discover pure vegetarian and sattvic cuisine.</p>
+    </div>
+
+    <div class="row g-4">
+        {% for rest in restaurants %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-0">
+                {% if rest.featured_image %}
+                <img src="/static/images/{{ rest.featured_image }}" class="card-img-top object-fit-cover" style="height: 200px;" alt="{{ rest.name }}">
+                {% else %}
+                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="bi bi-shop fs-1"></i>
+                </div>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h3 class="h5 fw-bold mb-1">{{ rest.name }}</h3>
+                    <p class="text-muted small mb-2">📍 {{ rest.locality }}, {{ rest.city }}</p>
+                    <p class="text-muted small mb-3">
+                        {% if rest.cuisine %}🥘 {{ rest.cuisine }}<br>{% endif %}
+                        {% if rest.price_range %}💰 {{ rest.price_range }}{% endif %}
+                    </p>
+                    <a href="/restaurants/{{ rest.slug }}" class="btn btn-outline-primary mt-auto">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">No restaurants found. Check back soon!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

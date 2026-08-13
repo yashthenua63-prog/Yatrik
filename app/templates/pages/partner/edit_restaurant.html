@@ -1,0 +1,71 @@
+{% extends "layouts/base.html" %}
+
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">Edit Restaurant Details</h1>
+                <a href="/partner/dashboard" class="btn btn-outline-secondary btn-sm">Cancel</a>
+            </div>
+
+            <div class="yatrik-card p-4">
+                <form method="POST" action="/partner/restaurant/{{ restaurant.id }}/edit">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Restaurant Name *</label>
+                            <input type="text" class="form-control" name="name" value="{{ restaurant.name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">City *</label>
+                            <select class="form-select" name="city" required>
+                                <option value="Vrindavan" {% if restaurant.city == 'Vrindavan' %}selected{% endif %}>Vrindavan</option>
+                                <option value="Mathura" {% if restaurant.city == 'Mathura' %}selected{% endif %}>Mathura</option>
+                                <option value="Govardhan" {% if restaurant.city == 'Govardhan' %}selected{% endif %}>Govardhan</option>
+                                <option value="Barsana" {% if restaurant.city == 'Barsana' %}selected{% endif %}>Barsana</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Address *</label>
+                            <input type="text" class="form-control" name="address" value="{{ restaurant.address }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-control" name="phone" value="{{ restaurant.phone }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Cuisine (e.g., Pure Veg, North Indian)</label>
+                            <input type="text" class="form-control" name="cuisine" value="{{ restaurant.cuisine }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Timings</label>
+                            <input type="text" class="form-control" name="timings" value="{{ restaurant.timings }}" placeholder="8:00 AM - 10:00 PM">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Price Range</label>
+                            <select class="form-select" name="price_range">
+                                <option value="₹" {% if restaurant.price_range == '₹' %}selected{% endif %}>₹ (Budget)</option>
+                                <option value="₹₹" {% if restaurant.price_range == '₹₹' %}selected{% endif %}>₹₹ (Mid-range)</option>
+                                <option value="₹₹₹" {% if restaurant.price_range == '₹₹₹' %}selected{% endif %}>₹₹₹ (Premium)</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" name="website" value="{{ restaurant.website }}">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="description" rows="4">{{ restaurant.description }}</textarea>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-orange w-100 py-2">Save Changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

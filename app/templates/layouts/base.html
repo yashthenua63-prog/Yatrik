@@ -4,7 +4,6 @@
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Google Search Console Verification -->
@@ -18,6 +17,7 @@
         name="description"
         content="{% block meta_description %}Yatrik is an AI-powered pilgrimage platform to discover temples, darshan timings and sacred places across Braj and Vrindavan.{% endblock %}"
     >
+    {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
 
     <!-- SEO Keywords -->
     <meta
@@ -68,6 +68,8 @@
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link
@@ -90,10 +92,12 @@
     {% block head %}
     {% endblock %}
 
+    {% block structured_data %}{% endblock %}
+
 </head>
 
 
-<body>
+<body class="{% block page_class %}{% endblock %}">
 
     <!-- Navbar -->
     {% include 'components/navbar.html' %}

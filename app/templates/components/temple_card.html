@@ -1,0 +1,31 @@
+<div class="card shadow-sm h-100">
+    <img
+        src="/static/images/{{ temple.image }}"
+        class="card-img-top {{ image_class|default('temple-card-image') }}"
+        alt="{{ temple.name }} Vrindavan"
+        loading="lazy"
+    >
+    <div class="card-body d-flex flex-column">
+        <h3 class="h5 fw-bold">
+            🛕 {{ temple.name }}
+        </h3>
+        <p class="text-muted mb-2">
+            📍 {{ temple.city }}
+        </p>
+        {% if show_distance and temple.distance %}
+        <p class="text-muted small">
+            📏 {{ temple.distance }} km away
+        </p>
+        {% endif %}
+        <p class="card-text">
+            {% if temple.description %}
+            {{ temple.description[:120] }}...
+            {% else %}
+            Explore this sacred place in Vrindavan.
+            {% endif %}
+        </p>
+        <a href="/temples/{{ temple.id }}" class="btn btn-success mt-auto">
+            View Details
+        </a>
+    </div>
+</div>
