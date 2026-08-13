@@ -13,6 +13,10 @@ def hotels_list():
     if price:
         query = query.filter(Hotel.price_range == price)
         
+    search = request.args.get("search")
+    if search:
+        query = query.filter(db.or_(Hotel.name.ilike(f"%{search}%"), Hotel.locality.ilike(f"%{search}%")))
+        
     hotels = query.all()
     return render_template("pages/hotels/list.html", hotels=hotels)
 

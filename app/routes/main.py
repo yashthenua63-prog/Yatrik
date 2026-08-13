@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify, request, Response
 from math import radians, sin, cos, sqrt, atan2
 
-from app.models import Temple, Place, Category, Hotel, Restaurant
+from app.models import Temple, Place, Category, Hotel, Restaurant, FoodItem
 from app.utils.temple_status import get_temple_status
 from app.utils.weather import get_weather
 from app.utils.weather_alert import get_weather_alert
@@ -293,6 +293,15 @@ def search_temples():
         ),
         Restaurant.verification_status == "PUBLISHED"
     ).all()
+    
+    # Search Food Items
+    food_items = FoodItem.query.filter(
+        db.or_(
+            FoodItem.name.ilike(f"%{query}%"),
+            FoodItem.description.ilike(f"%{query}%")
+        ),
+        FoodItem.is_available == True
+    ).all()
 
     data = []
 
@@ -339,6 +348,17 @@ def search_temples():
             "image": r.featured_image,
             "url": f"/restaurants/{r.slug}"
         })
+        
+    for f in food_items:
+        data.append({
+            "id": f.id,
+            "type": "food_item",
+            "name": f.name,
+            "city": f.category.restaurant.city if f.category and f.category.restaurant else "",
+            "description": f.description,
+            "image": f.image_url,
+            "url": f"/restaurants/{f.category.restaurant.slug}/menu" if f.category and f.category.restaurant else "/food-items"
+        })
 
     return jsonify(data)
 
@@ -355,22 +375,15 @@ def nearby_temples(id):
     if temple.latitude is None or temple.longitude is None:
         return jsonify([])
 
-    lat1 = radians(temple.latitude)
-    lon1 = radians(temple.longitude)
-    R = 6371
-
-    def calc_dist(lat2_deg, lon2_deg):
-        lat2 = radians(lat2_deg)
-        lon2 = radians(lon2_deg)
-        a = sin((lat2 - lat1)/2)**2 + cos(lat1) * cos(lat2) * sin((lon2 - lon1)/2)**2
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        return R * c
+    from app.services.distance_service import calculate_distance_km
 
     # Add other temples
     for other in Temple.query.all():
         if other.id == temple.id or other.latitude is None or other.longitude is None:
             continue
-        dist = calc_dist(other.latitude, other.longitude)
+        dist = calculate_distance_km(temple.latitude, temple.longitude, other.latitude, other.longitude)
+        if dist is None:
+            continue
         nearby.append({
             "id": other.id,
             "type": "temple",
@@ -384,7 +397,8 @@ def nearby_temples(id):
     for place in Place.query.all():
         if place.latitude is None or place.longitude is None:
             continue
-        dist = calc_dist(place.latitude, place.longitude)
+        dist = calculate_distance_km(temple.latitude, temple.longitude, place.latitude, place.longitude)
+        if dist is None: continue
         nearby.append({
             "id": place.id,
             "type": "place",
@@ -398,7 +412,8 @@ def nearby_temples(id):
     for hotel in Hotel.query.filter_by(verification_status="PUBLISHED").all():
         if hotel.latitude is None or hotel.longitude is None:
             continue
-        dist = calc_dist(hotel.latitude, hotel.longitude)
+        dist = calculate_distance_km(temple.latitude, temple.longitude, hotel.latitude, hotel.longitude)
+        if dist is None: continue
         nearby.append({
             "id": hotel.id,
             "type": "hotel",
@@ -412,7 +427,85 @@ def nearby_temples(id):
     for restaurant in Restaurant.query.filter_by(verification_status="PUBLISHED").all():
         if restaurant.latitude is None or restaurant.longitude is None:
             continue
-        dist = calc_dist(restaurant.latitude, restaurant.longitude)
+        dist = calculate_distance_km(temple.latitude, temple.longitude, restaurant.latitude, restaurant.longitude)
+        if dist is None: continue
+        nearby.append({
+            "id": restaurant.id,
+            "type": "restaurant",
+            "name": restaurant.name,
+            "city": restaurant.city,
+            "image": restaurant.featured_image,
+            "distance": round(dist, 2)
+        })
+
+    # Sort nearest first
+    nearby.sort(key=lambda x: x["distance"])
+
+    return jsonify(nearby[:3])
+
+
+@main_bp.route("/api/nearby")
+def nearby_generic():
+    lat = request.args.get("lat", type=float)
+    lon = request.args.get("lon", type=float)
+    
+    if lat is None or lon is None:
+        return jsonify([])
+
+    from app.services.distance_service import calculate_distance_km
+    nearby = []
+
+    # Add temples
+    for temple in Temple.query.all():
+        if temple.latitude is None or temple.longitude is None:
+            continue
+        dist = calculate_distance_km(lat, lon, temple.latitude, temple.longitude)
+        if dist is None or dist == 0: continue
+        nearby.append({
+            "id": temple.id,
+            "type": "temple",
+            "name": temple.name,
+            "city": temple.city,
+            "image": temple.image,
+            "distance": round(dist, 2)
+        })
+
+    # Add places
+    for place in Place.query.all():
+        if place.latitude is None or place.longitude is None:
+            continue
+        dist = calculate_distance_km(lat, lon, place.latitude, place.longitude)
+        if dist is None or dist == 0: continue
+        nearby.append({
+            "id": place.id,
+            "type": "place",
+            "name": place.name,
+            "city": place.city,
+            "image": place.image,
+            "distance": round(dist, 2)
+        })
+        
+    # Add hotels
+    for hotel in Hotel.query.filter_by(verification_status="PUBLISHED").all():
+        if hotel.latitude is None or hotel.longitude is None:
+            continue
+        dist = calculate_distance_km(lat, lon, hotel.latitude, hotel.longitude)
+        if dist is None or dist == 0: continue
+        nearby.append({
+            "id": hotel.id,
+            "type": "hotel",
+            "name": hotel.name,
+            "city": hotel.city,
+            "image": hotel.featured_image,
+            "distance": round(dist, 2)
+        })
+        
+    # Add restaurants
+    for restaurant in Restaurant.query.filter_by(verification_status="PUBLISHED").all():
+        if restaurant.latitude is None or restaurant.longitude is None:
+            continue
+        dist = calculate_distance_km(lat, lon, restaurant.latitude, restaurant.longitude)
+        if dist is None or dist == 0: continue
         nearby.append({
             "id": restaurant.id,
             "type": "restaurant",

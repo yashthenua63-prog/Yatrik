@@ -20,7 +20,11 @@
                 </span>
                 {% endif %}
             </div>
-            <p class="text-muted fs-5 mb-4">📍 {{ hotel.address }}, {{ hotel.city }}</p>
+            <p class="text-muted fs-5 mb-2">📍 {{ hotel.address }}, {{ hotel.city }}</p>
+            <div class="mb-4">
+                <span class="badge bg-warning text-dark me-2">⭐ {{ hotel.rating }}</span>
+                <span class="text-muted small">({{ hotel.reviews_count }} reviews)</span>
+            </div>
             
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body">
@@ -66,11 +70,76 @@
                         </button>
                         <a href="https://www.google.com/maps/dir/?api=1&destination={{ hotel.latitude }},{{ hotel.longitude }}" target="_blank" class="btn btn-light border w-100">
                             <i class="bi bi-geo-alt"></i> Get Directions
-                        </a>
                     </div>
+                    
+                    {% if current_user.is_authenticated and current_user.is_hotel_partner and not hotel.owner_id %}
+                    <div class="mt-4 pt-3 border-top">
+                        <h5 class="fw-bold fs-6">Manage this property?</h5>
+                        <form action="/claim/hotel/{{ hotel.id }}" method="POST">
+                            <button class="btn btn-outline-warning w-100">Claim this Listing</button>
+                        </form>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    
+    <hr class="my-5">
+    
+    <!-- Nearby section -->
+    <h3 class="fw-bold mb-4">Nearby Places</h3>
+    <div class="row g-4" id="nearby-container">
+        <div class="col-12 text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>
+    </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const nearbyContainer = document.getElementById("nearby-container");
+    if (nearbyContainer && {{ hotel.latitude|default('null') }} && {{ hotel.longitude|default('null') }}) {
+        fetch(`/api/nearby?lat={{ hotel.latitude }}&lon={{ hotel.longitude }}`)
+            .then(res => res.json())
+            .then(places => {
+                nearbyContainer.innerHTML = "";
+                if (!places.length) {
+                    nearbyContainer.innerHTML = `<div class="col-12"><div class="alert alert-light border">No nearby places found.</div></div>`;
+                } else {
+                    places.forEach(place => {
+                        let link = place.type === 'temple' ? `/temples/${place.id}` : 
+                                   place.type === 'hotel' ? `/hotels/${place.id}` : 
+                                   place.type === 'restaurant' ? `/restaurants/${place.id}` : `/places/${place.id}`;
+                        let img = place.image ? place.image : `/static/images/default_${place.type}.jpg`;
+                        if (!place.image && place.type === 'hotel') img = '/static/images/default_hotel.jpg';
+                        if (!place.image && place.type === 'restaurant') img = '/static/images/default_restaurant.jpg';
+                        if (!place.image && place.type === 'temple') img = '/static/images/default_temple.jpg';
+                        
+                        nearbyContainer.innerHTML += `
+                            <div class="col-12 col-md-4">
+                                <div class="card shadow-sm h-100 border-0" style="border-radius: var(--radius);">
+                                    <img src="${img}" 
+                                         loading="lazy" 
+                                         class="card-img-top object-fit-cover" 
+                                         style="height:150px; border-top-left-radius: var(--radius); border-top-right-radius: var(--radius);" 
+                                         alt="${place.name}">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold mb-1 text-dark">${place.name}</h5>
+                                        <span class="badge bg-secondary mb-2">${place.type}</span>
+                                        <p class="text-muted small mb-3"><i class="bi bi-geo-alt" style="color: var(--saffron);"></i> ${place.city} &bull; 📏 ${place.distance} km</p>
+                                        <a href="${link}" class="btn btn-sm btn-outline-dark rounded-pill fw-bold w-100">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            })
+            .catch(error => {
+                nearbyContainer.innerHTML = `<div class="col-12"><div class="alert alert-light border">Unable to load nearby places.</div></div>`;
+            });
+    } else if (nearbyContainer) {
+        nearbyContainer.innerHTML = `<div class="col-12"><div class="alert alert-light border">Location data not available to find nearby places.</div></div>`;
+    }
+});
+</script>
 {% endblock %}

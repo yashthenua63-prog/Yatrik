@@ -48,7 +48,7 @@ def admin_user(db, app):
 @pytest.fixture
 def partner_user_a(db, app):
     with app.app_context():
-        user = User(name="Partner A", email="partner_a@yatrik.test", role="PARTNER")
+        user = User(name="Partner A", email="partner_a@yatrik.test", role="HOTEL_PARTNER")
         user.set_password("partnerpass123")
         db.session.add(user)
         db.session.commit()
@@ -58,7 +58,34 @@ def partner_user_a(db, app):
 @pytest.fixture
 def partner_user_b(db, app):
     with app.app_context():
-        user = User(name="Partner B", email="partner_b@yatrik.test", role="PARTNER")
+        user = User(name="Partner B", email="partner_b@yatrik.test", role="HOTEL_PARTNER")
+        user.set_password("partnerpass123")
+        db.session.add(user)
+        db.session.commit()
+        return user.id
+
+@pytest.fixture
+def restaurant_partner_a(db, app):
+    with app.app_context():
+        user = User(name="Rest Partner A", email="rest_a@yatrik.test", role="RESTAURANT_PARTNER")
+        user.set_password("partnerpass123")
+        db.session.add(user)
+        db.session.commit()
+        return user.id
+
+@pytest.fixture
+def restaurant_partner_b(db, app):
+    with app.app_context():
+        user = User(name="Rest Partner B", email="rest_b@yatrik.test", role="RESTAURANT_PARTNER")
+        user.set_password("partnerpass123")
+        db.session.add(user)
+        db.session.commit()
+        return user.id
+
+@pytest.fixture
+def driver_partner(db, app):
+    with app.app_context():
+        user = User(name="Driver", email="driver@yatrik.test", role="DRIVER")
         user.set_password("partnerpass123")
         db.session.add(user)
         db.session.commit()

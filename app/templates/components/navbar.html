@@ -40,9 +40,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/admin">Admin Panel</a>
                         </li>
-                    {% elif current_user.role == 'PARTNER' %}
+                    {% elif current_user.is_driver %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/partner/dashboard">Dashboard</a>
+                            <a class="nav-link" href="/partner/driver/dashboard">Dashboard</a>
+                        </li>
+                    {% elif current_user.is_hotel_partner %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/partner/hotel/dashboard">Dashboard</a>
+                        </li>
+                    {% elif current_user.is_restaurant_partner %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/partner/restaurant/dashboard">Dashboard</a>
                         </li>
                     {% else %}
                         <li class="nav-item">

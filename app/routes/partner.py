@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_required, current_user
-from app.models import Hotel, Restaurant, Driver, Document
+from app.models import Hotel, Restaurant, Driver, Document, FoodCategory, FoodItem, ClaimRequest
 from app.database import db
 from werkzeug.utils import secure_filename
 import os
@@ -33,34 +33,53 @@ def _calc_completion(obj, required_fields):
     return int(filled / len(required_fields) * 100) if required_fields else 0
 
 
-@partner_bp.route('/dashboard')
+@partner_bp.route('/driver/dashboard')
 @login_required
-def dashboard():
+def driver_dashboard():
     if current_user.is_admin:
         return redirect('/admin-yatrik-secret')
-    if not current_user.is_partner:
-        flash('You need a partner account to access the dashboard.', 'warning')
-        return redirect(url_for('main.home'))
+    if not current_user.is_driver:
+        abort(403)
 
-    hotels = Hotel.query.filter_by(owner_id=current_user.id).all()
-    restaurants = Restaurant.query.filter_by(owner_id=current_user.id).all()
     driver = Driver.query.filter_by(user_id=current_user.id).first()
-
-    hotel_fields = ['name', 'description', 'address', 'phone', 'official_website']
-    restaurant_fields = ['name', 'description', 'cuisine', 'timings', 'address', 'phone']
     driver_fields = ['name', 'phone', 'vehicle_type', 'vehicle_number', 'service_area']
-
-    hotel_completions = {h.id: _calc_completion(h, hotel_fields) for h in hotels}
-    restaurant_completions = {r.id: _calc_completion(r, restaurant_fields) for r in restaurants}
     driver_completion = _calc_completion(driver, driver_fields) if driver else 0
 
-    return render_template('pages/partner/dashboard.html',
-                           hotels=hotels,
-                           restaurants=restaurants,
+    return render_template('pages/partner/driver_dashboard.html',
                            driver=driver,
-                           hotel_completions=hotel_completions,
-                           restaurant_completions=restaurant_completions,
                            driver_completion=driver_completion)
+
+@partner_bp.route('/hotel/dashboard')
+@login_required
+def hotel_dashboard():
+    if current_user.is_admin:
+        return redirect('/admin-yatrik-secret')
+    if not current_user.is_hotel_partner:
+        abort(403)
+
+    hotels = Hotel.query.filter_by(owner_id=current_user.id).all()
+    hotel_fields = ['name', 'description', 'address', 'phone', 'official_website']
+    hotel_completions = {h.id: _calc_completion(h, hotel_fields) for h in hotels}
+
+    return render_template('pages/partner/hotel_dashboard.html',
+                           hotels=hotels,
+                           hotel_completions=hotel_completions)
+
+@partner_bp.route('/restaurant/dashboard')
+@login_required
+def restaurant_dashboard():
+    if current_user.is_admin:
+        return redirect('/admin-yatrik-secret')
+    if not current_user.is_restaurant_partner:
+        abort(403)
+
+    restaurants = Restaurant.query.filter_by(owner_id=current_user.id).all()
+    restaurant_fields = ['name', 'description', 'cuisine', 'timings', 'address', 'phone']
+    restaurant_completions = {r.id: _calc_completion(r, restaurant_fields) for r in restaurants}
+
+    return render_template('pages/partner/restaurant_dashboard.html',
+                           restaurants=restaurants,
+                           restaurant_completions=restaurant_completions)
 
 
 # ── Hotel Onboard ─────────────────────────────────────────────────────────────
@@ -68,7 +87,7 @@ def dashboard():
 @partner_bp.route('/onboard/hotel', methods=['GET', 'POST'])
 @login_required
 def onboard_hotel():
-    if not current_user.is_partner:
+    if not current_user.is_hotel_partner:
         abort(403)
 
     if request.method == 'POST':
@@ -102,7 +121,7 @@ def onboard_hotel():
         db.session.commit()
 
         flash('Property submitted for verification. Our team will review it shortly.', 'success')
-        return redirect(url_for('partner.dashboard'))
+        return redirect(url_for('partner.hotel_dashboard'))
 
     return render_template('pages/partner/onboard_hotel.html')
 
@@ -128,7 +147,7 @@ def edit_hotel(hotel_id):
         hotel.price_range = request.form.get('price_range', hotel.price_range or '').strip()
         db.session.commit()
         flash('Property details updated.', 'success')
-        return redirect(url_for('partner.dashboard'))
+        return redirect(url_for('partner.hotel_dashboard'))
 
     return render_template('pages/partner/edit_hotel.html', hotel=hotel)
 
@@ -138,7 +157,7 @@ def edit_hotel(hotel_id):
 @partner_bp.route('/onboard/restaurant', methods=['GET', 'POST'])
 @login_required
 def onboard_restaurant():
-    if not current_user.is_partner:
+    if not current_user.is_restaurant_partner:
         abort(403)
 
     if request.method == 'POST':
@@ -172,7 +191,7 @@ def onboard_restaurant():
         db.session.commit()
 
         flash('Restaurant submitted for verification.', 'success')
-        return redirect(url_for('partner.dashboard'))
+        return redirect(url_for('partner.restaurant_dashboard'))
 
     return render_template('pages/partner/onboard_restaurant.html')
 
@@ -198,7 +217,7 @@ def edit_restaurant(restaurant_id):
         restaurant.price_range = request.form.get('price_range', restaurant.price_range or '').strip()
         db.session.commit()
         flash('Restaurant details updated.', 'success')
-        return redirect(url_for('partner.dashboard'))
+        return redirect(url_for('partner.restaurant_dashboard'))
 
     return render_template('pages/partner/edit_restaurant.html', restaurant=restaurant)
 
@@ -208,11 +227,11 @@ def edit_restaurant(restaurant_id):
 @partner_bp.route('/onboard/driver', methods=['GET', 'POST'])
 @login_required
 def onboard_driver():
-    if not current_user.is_partner:
+    if not current_user.is_driver:
         abort(403)
     if Driver.query.filter_by(user_id=current_user.id).first():
         flash('You already have a driver profile.', 'info')
-        return redirect(url_for('partner.dashboard'))
+        return redirect(url_for('partner.driver_dashboard'))
 
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
@@ -264,7 +283,7 @@ def onboard_driver():
 
         db.session.commit()
         flash('Driver profile submitted for verification. We will review your documents shortly.', 'success')
-        return redirect(url_for('partner.dashboard'))
+        return redirect(url_for('partner.driver_dashboard'))
 
     return render_template('pages/partner/onboard_driver.html')
 
@@ -277,9 +296,98 @@ def toggle_driver_status():
     driver = Driver.query.filter_by(user_id=current_user.id).first_or_404()
     if driver.verification_status != 'VERIFIED':
         flash('Only verified drivers can change their status.', 'warning')
-        return redirect(url_for('partner.dashboard'))
+        return redirect(url_for('partner.driver_dashboard'))
 
     driver.status = 'ONLINE' if driver.status == 'OFFLINE' else 'OFFLINE'
     db.session.commit()
     flash(f'Status updated to {driver.status}.', 'success')
-    return redirect(url_for('partner.dashboard'))
+    return redirect(url_for('partner.driver_dashboard'))
+
+# ── Menu Management ────────────────────────────────────────────────────────
+
+@partner_bp.route('/restaurant/<int:restaurant_id>/categories', methods=['POST'])
+@login_required
+def add_food_category(restaurant_id):
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+    if restaurant.owner_id != current_user.id and not current_user.is_admin:
+        abort(403)
+    
+    name = request.form.get('name', '').strip()
+    if name:
+        category = FoodCategory(restaurant_id=restaurant.id, name=name, description=request.form.get('description', '').strip())
+        db.session.add(category)
+        db.session.commit()
+        flash('Category added.', 'success')
+    return redirect(url_for('partner.edit_restaurant', restaurant_id=restaurant.id))
+
+@partner_bp.route('/restaurant/<int:restaurant_id>/items', methods=['POST'])
+@login_required
+def add_food_item(restaurant_id):
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+    if restaurant.owner_id != current_user.id and not current_user.is_admin:
+        abort(403)
+    
+    category_id = request.form.get('category_id')
+    category = FoodCategory.query.get_or_404(category_id)
+    if category.restaurant_id != restaurant.id:
+        abort(403)
+    
+    name = request.form.get('name', '').strip()
+    price = request.form.get('price', type=float)
+    if name and price is not None:
+        item = FoodItem(
+            category_id=category.id,
+            name=name,
+            description=request.form.get('description', '').strip(),
+            price=price,
+            is_veg=request.form.get('is_veg') == '1'
+        )
+        db.session.add(item)
+        db.session.commit()
+        flash('Food item added.', 'success')
+    return redirect(url_for('partner.edit_restaurant', restaurant_id=restaurant.id))
+
+@partner_bp.route('/restaurant/<int:restaurant_id>/items/<int:item_id>/delete', methods=['POST'])
+@login_required
+def delete_food_item(restaurant_id, item_id):
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+    if restaurant.owner_id != current_user.id and not current_user.is_admin:
+        abort(403)
+        
+    item = FoodItem.query.get_or_404(item_id)
+    if item.category.restaurant_id != restaurant.id:
+        abort(403)
+        
+    db.session.delete(item)
+    db.session.commit()
+    flash('Food item deleted.', 'success')
+    return redirect(url_for('partner.edit_restaurant', restaurant_id=restaurant.id))
+
+# ── Claim Listing ────────────────────────────────────────────────────────
+
+@partner_bp.route('/claim', methods=['GET', 'POST'])
+@login_required
+def claim_listing():
+    if request.method == 'POST':
+        entity_type = request.form.get('entity_type', '').upper()
+        entity_id = request.form.get('entity_id', type=int)
+        message = request.form.get('message', '').strip()
+        contact = request.form.get('contact_number', '').strip()
+        
+        if not entity_type or not entity_id:
+            flash('Invalid listing to claim.', 'warning')
+            return redirect(url_for('main.index'))
+            
+        claim = ClaimRequest(
+            user_id=current_user.id,
+            entity_type=entity_type,
+            entity_id=entity_id,
+            message=message,
+            contact_number=contact
+        )
+        db.session.add(claim)
+        db.session.commit()
+        flash('Claim request submitted successfully. We will contact you soon.', 'success')
+        return redirect(url_for('main.index'))
+        
+    return render_template('pages/partner/claim.html')

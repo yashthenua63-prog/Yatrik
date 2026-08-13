@@ -4,64 +4,82 @@
 
 {% block content %}
 <!-- 1. Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <h1>Plan Your Braj Journey with Yatrik</h1>
-        <p>Discover. Plan. Travel. Experience Braj.</p>
-        <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
-            <a href="/temples" class="btn btn-orange rounded-pill px-4 py-2 fs-5">Explore Temples</a>
-            <a href="/plan-my-trip" class="btn btn-outline-dark rounded-pill px-4 py-2 fs-5">Plan My Trip</a>
-            <a href="/hotels" class="btn btn-outline-dark rounded-pill px-4 py-2 fs-5">Find Stays</a>
-            <a href="/ride" class="btn btn-outline-dark rounded-pill px-4 py-2 fs-5">Find Rides</a>
+<section class="hero-section" style="background: linear-gradient(135deg, var(--cream) 0%, #FFEFD5 100%); padding: 6rem 1rem; position: relative; overflow: hidden;">
+    <div class="container position-relative z-1">
+        <h1 class="display-3 fw-bold mb-3" style="color: var(--maroon);">Plan Your Spiritual Journey in Braj</h1>
+        <p class="lead mb-5" style="color: var(--text-primary); max-width: 700px; margin: 0 auto; font-size: 1.2rem;">Discover divine temples, plan your darshan, and experience the sacred land of Vrindavan with Yatrik.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="/temples" class="btn btn-orange rounded-pill px-5 py-3 fs-5 shadow-sm fw-bold">Explore Temples</a>
+            <a href="/plan-my-trip" class="btn rounded-pill px-5 py-3 fs-5 shadow-sm fw-bold" style="background-color: var(--maroon); color: white;">Plan My Trip</a>
+            <a href="/hotels" class="btn btn-outline-dark rounded-pill px-5 py-3 fs-5 shadow-sm fw-bold" style="border-color: var(--text-primary);">Find Stays</a>
         </div>
     </div>
 </section>
 
 <!-- 2. Journey Bar -->
-<section class="container my-5">
-    <div class="journey-steps-container">
-        <div class="journey-step">
-            <div class="icon-wrapper"><i class="bi bi-compass"></i></div>
-            <span>DISCOVER</span>
+<section class="container my-5 py-4">
+    <div class="row text-center g-4">
+        <div class="col-6 col-md-2">
+            <div class="journey-step-item">
+                <div class="fs-1" style="color: var(--saffron);"><i class="bi bi-compass"></i></div>
+                <div class="fw-bold mt-2" style="color: var(--text-primary);">DISCOVER</div>
+            </div>
         </div>
-        <div class="journey-step">
-            <div class="icon-wrapper"><i class="bi bi-card-checklist"></i></div>
-            <span>PLAN</span>
+        <div class="col-6 col-md-2">
+            <div class="journey-step-item">
+                <div class="fs-1" style="color: var(--saffron);"><i class="bi bi-card-checklist"></i></div>
+                <div class="fw-bold mt-2" style="color: var(--text-primary);">PLAN</div>
+            </div>
         </div>
-        <div class="journey-step">
-            <div class="icon-wrapper"><i class="bi bi-house-door"></i></div>
-            <span>STAY</span>
+        <div class="col-6 col-md-2">
+            <div class="journey-step-item">
+                <div class="fs-1" style="color: var(--saffron);"><i class="bi bi-house-door"></i></div>
+                <div class="fw-bold mt-2" style="color: var(--text-primary);">STAY</div>
+            </div>
         </div>
-        <div class="journey-step">
-            <div class="icon-wrapper"><i class="bi bi-cup-hot"></i></div>
-            <span>EAT</span>
+        <div class="col-6 col-md-2">
+            <div class="journey-step-item">
+                <div class="fs-1" style="color: var(--saffron);"><i class="bi bi-cup-hot"></i></div>
+                <div class="fw-bold mt-2" style="color: var(--text-primary);">EAT</div>
+            </div>
         </div>
-        <div class="journey-step">
-            <div class="icon-wrapper"><i class="bi bi-car-front"></i></div>
-            <span>TRAVEL</span>
+        <div class="col-6 col-md-2">
+            <div class="journey-step-item">
+                <div class="fs-1" style="color: var(--saffron);"><i class="bi bi-car-front"></i></div>
+                <div class="fw-bold mt-2" style="color: var(--text-primary);">TRAVEL</div>
+            </div>
         </div>
-        <div class="journey-step">
-            <div class="icon-wrapper"><i class="bi bi-stars"></i></div>
-            <span>EXPERIENCE</span>
+        <div class="col-6 col-md-2">
+            <div class="journey-step-item">
+                <div class="fs-1" style="color: var(--saffron);"><i class="bi bi-stars"></i></div>
+                <div class="fw-bold mt-2" style="color: var(--text-primary);">EXPERIENCE</div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- 3. Popular Temples -->
-<section class="container my-5">
-    <h2 class="mb-4 text-center">Sacred Temples of Braj</h2>
+<section class="container my-5 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="color: var(--maroon); font-weight: 800;">Sacred Temples of Braj</h2>
+        <a href="/temples" class="btn btn-outline-dark rounded-pill">View All</a>
+    </div>
     
     {% if temples %}
     <div class="row g-4">
         {% for temple in temples[:6] %}
         <div class="col-md-6 col-lg-4">
             <a href="/temples/{{ temple.id }}" class="text-decoration-none">
-                <div class="yatrik-card h-100">
-                    <img src="{{ temple.image_url or url_for('static', filename='images/default_temple.jpg') }}" class="card-img-top" alt="{{ temple.name }}">
-                    <div class="card-body">
-                        <h4 class="card-title text-dark">{{ temple.name }}</h4>
-                        <p class="text-muted mb-2"><i class="bi bi-geo-alt"></i> {{ temple.city }}</p>
-                        <p class="text-secondary small mb-0"><i class="bi bi-clock"></i> {{ temple.morning_darshan|default('Timing varied') }}</p>
+                <div class="yatrik-card h-100 border-0 shadow-sm" style="border-radius: var(--radius);">
+                    <img src="{{ temple.image_url or url_for('static', filename='images/' + temple.image) }}" 
+                         loading="lazy" 
+                         onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default_temple.jpg') }}';" 
+                         class="card-img-top" 
+                         alt="{{ temple.name }}">
+                    <div class="card-body p-4" style="background-color: white;">
+                        <h4 class="card-title fw-bold" style="color: var(--maroon);">{{ temple.name }}</h4>
+                        <p class="mb-2" style="color: var(--text-primary); font-weight: 500;"><i class="bi bi-geo-alt" style="color: var(--saffron);"></i> {{ temple.city }}</p>
+                        <p class="small mb-0" style="color: var(--text-muted);"><i class="bi bi-clock"></i> {{ temple.morning_darshan|default('Timing varied') }}</p>
                     </div>
                 </div>
             </a>
@@ -78,32 +96,39 @@
 </section>
 
 <!-- 4. Braj Trip OS CTA -->
-<section class="py-5" style="background-color: var(--text-primary); color: white;">
-    <div class="container text-center">
-        <h2 class="mb-3 text-white">Plan Your Entire Braj Yatra in Minutes</h2>
-        <p class="lead mb-4" style="color: var(--border);">Experience the power of Yatrik Trip OS. Tell us what you want, and we generate a personalized itinerary.</p>
-        <a href="/plan-my-trip" class="btn btn-orange rounded-pill px-5 py-3 fs-5 text-white">Plan My Trip</a>
+<section class="py-5 my-5" style="background: linear-gradient(135deg, var(--maroon) 0%, #4A0000 100%); color: white;">
+    <div class="container text-center py-4">
+        <h2 class="mb-3 display-5 fw-bold text-white">Your Personal Braj Yatra Planner</h2>
+        <p class="lead mb-4 mx-auto" style="color: var(--cream); max-width: 800px;">Tell us your preferences and let Yatrik Trip OS instantly craft a personalized itinerary for your spiritual journey.</p>
+        <a href="/plan-my-trip" class="btn btn-orange rounded-pill px-5 py-3 fs-5 text-white fw-bold shadow">Generate My Itinerary</a>
     </div>
 </section>
 
 <!-- 5. Hotels & Stays -->
-<section class="container my-5">
-    <h2 class="mb-4">Trusted Stays in Braj</h2>
+<section class="container my-5 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="color: var(--maroon); font-weight: 800;">Trusted Stays in Braj</h2>
+        <a href="/hotels" class="btn btn-outline-dark rounded-pill">View All</a>
+    </div>
     
     {% if hotels %}
     <div class="row g-4">
         {% for hotel in hotels[:4] %}
         <div class="col-md-6 col-lg-3">
-            <div class="yatrik-card h-100">
-                <img src="{{ hotel.image_url or url_for('static', filename='images/default_hotel.jpg') }}" class="card-img-top" alt="{{ hotel.name }}">
-                <div class="card-body">
+            <div class="yatrik-card h-100 border-0 shadow-sm" style="border-radius: var(--radius);">
+                <img src="{{ hotel.image_url or url_for('static', filename='images/default_hotel.jpg') }}" 
+                     loading="lazy" 
+                     onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default_hotel.jpg') }}';" 
+                     class="card-img-top" 
+                     alt="{{ hotel.name }}">
+                <div class="card-body p-3" style="background-color: white;">
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h5 class="card-title mb-0">{{ hotel.name }}</h5>
+                        <h5 class="card-title mb-0 fw-bold" style="color: var(--text-primary);">{{ hotel.name }}</h5>
                         {% if hotel.is_verified %}
                             <span class="verified-badge"><i class="bi bi-shield-check"></i></span>
                         {% endif %}
                     </div>
-                    <p class="text-muted small mb-0"><i class="bi bi-geo-alt"></i> {{ hotel.city }}</p>
+                    <p class="small mb-0" style="color: var(--text-muted);"><i class="bi bi-geo-alt" style="color: var(--saffron);"></i> {{ hotel.city }}</p>
                 </div>
             </div>
         </div>
@@ -112,27 +137,34 @@
     {% else %}
     <div class="empty-state">
         <i class="bi bi-house"></i>
-        <h3>Be the first to list your property</h3>
+        <h3>List Your Property</h3>
         <p>Partner with Yatrik and reach thousands of pilgrims.</p>
-        <a href="/partner/register" class="btn btn-outline-dark mt-3">List Now</a>
+        <a href="/partner/register" class="btn btn-orange rounded-pill mt-3 px-4">List Now</a>
     </div>
     {% endif %}
 </section>
 
 <!-- 6. Restaurants & Food -->
-<section class="container my-5">
-    <h2 class="mb-4">Pure Veg Food & Prasad</h2>
+<section class="container my-5 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="color: var(--maroon); font-weight: 800;">Pure Veg Food & Prasad</h2>
+        <a href="/restaurants" class="btn btn-outline-dark rounded-pill">View All</a>
+    </div>
     
     {% if restaurants %}
     <div class="row g-4">
         {% for restaurant in restaurants[:4] %}
         <div class="col-md-6 col-lg-3">
-            <div class="yatrik-card h-100">
-                <img src="{{ restaurant.image_url or url_for('static', filename='images/default_food.jpg') }}" class="card-img-top" alt="{{ restaurant.name }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ restaurant.name }}</h5>
-                    <p class="text-muted small mb-0"><i class="bi bi-geo-alt"></i> {{ restaurant.city }}</p>
-                    <p class="text-secondary small">{{ restaurant.cuisine|default('Satvik Food') }}</p>
+            <div class="yatrik-card h-100 border-0 shadow-sm" style="border-radius: var(--radius);">
+                <img src="{{ restaurant.image_url or url_for('static', filename='images/default_food.jpg') }}" 
+                     loading="lazy" 
+                     onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default_food.jpg') }}';" 
+                     class="card-img-top" 
+                     alt="{{ restaurant.name }}">
+                <div class="card-body p-3" style="background-color: white;">
+                    <h5 class="card-title fw-bold" style="color: var(--text-primary);">{{ restaurant.name }}</h5>
+                    <p class="small mb-1" style="color: var(--text-muted);"><i class="bi bi-geo-alt" style="color: var(--saffron);"></i> {{ restaurant.city }}</p>
+                    <p class="small fw-semibold mb-0" style="color: var(--saffron-dark);">{{ restaurant.cuisine|default('Satvik Food') }}</p>
                 </div>
             </div>
         </div>
@@ -143,157 +175,79 @@
         <i class="bi bi-shop"></i>
         <h3>No restaurants listed yet</h3>
         <p>Are you a restaurant owner? List your pure veg restaurant.</p>
+        <a href="/partner/register" class="btn btn-orange rounded-pill mt-3 px-4">List Now</a>
     </div>
     {% endif %}
 </section>
 
-<!-- 7. Events & Festivals -->
-<section class="container my-5">
-    <h2 class="mb-4 text-center">Upcoming Events in Braj</h2>
-    
-    {% if events %}
-    <div class="row g-4 justify-content-center">
-        {% for event in events[:3] %}
-        <div class="col-md-4">
-            <div class="yatrik-card h-100 p-3">
-                <div class="text-primary fw-bold mb-2">{{ event.date }}</div>
-                <h5 class="card-title">{{ event.title }}</h5>
-                <p class="text-muted small mb-0"><i class="bi bi-geo-alt"></i> {{ event.city }}</p>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="empty-state">
-        <i class="bi bi-calendar-event"></i>
-        <h3>No upcoming events listed yet.</h3>
-        <p>Braj is full of festivals. Check back later for updates.</p>
-    </div>
-    {% endif %}
-</section>
-
-<!-- 8. Why Yatrik -->
-<section class="py-5 bg-white">
-    <div class="container text-center">
-        <h2 class="mb-5">Why Choose Yatrik?</h2>
+<!-- 7. Why Yatrik -->
+<section class="py-5" style="background-color: white; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container text-center py-4">
+        <h2 class="mb-5" style="color: var(--maroon); font-weight: 800;">Why Choose Yatrik?</h2>
         <div class="row g-4">
             <div class="col-md-4">
-                <i class="bi bi-shield-check fs-1 text-success mb-3"></i>
-                <h4>Verified Partners</h4>
-                <p class="text-muted">We personally verify hotels and drivers to ensure a safe and comfortable stay.</p>
+                <div class="p-4 h-100" style="background-color: var(--cream); border-radius: var(--radius);">
+                    <div class="mb-3 fs-1 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: var(--maroon); color: white; border-radius: 50%;">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4 class="fw-bold">Verified Partners</h4>
+                    <p style="color: var(--text-muted);">We physically verify all hotels, cabs, and services to ensure a safe and spiritual experience.</p>
+                </div>
             </div>
             <div class="col-md-4">
-                <i class="bi bi-map fs-1 text-primary mb-3"></i>
-                <h4>Local Knowledge</h4>
-                <p class="text-muted">Built by locals. Get accurate darshan timings and hidden spiritual spots.</p>
+                <div class="p-4 h-100" style="background-color: var(--cream); border-radius: var(--radius);">
+                    <div class="mb-3 fs-1 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: var(--saffron); color: white; border-radius: 50%;">
+                        <i class="bi bi-map"></i>
+                    </div>
+                    <h4 class="fw-bold">Local Knowledge</h4>
+                    <p style="color: var(--text-muted);">Built by locals of Braj. Get accurate darshan timings, hidden spots, and deep spiritual insights.</p>
+                </div>
             </div>
             <div class="col-md-4">
-                <i class="bi bi-heart fs-1 text-danger mb-3"></i>
-                <h4>Transparency First</h4>
-                <p class="text-muted">No hidden fees, no fake reviews. Pure dedication to your spiritual journey.</p>
+                <div class="p-4 h-100" style="background-color: var(--cream); border-radius: var(--radius);">
+                    <div class="mb-3 fs-1 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: var(--gold); color: var(--text-primary); border-radius: 50%;">
+                        <i class="bi bi-heart"></i>
+                    </div>
+                    <h4 class="fw-bold">Devotion First</h4>
+                    <p style="color: var(--text-muted);">Dedicated to enhancing your pilgrimage with transparency, zero hidden fees, and pure devotion.</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 9. Partner With Yatrik -->
-<section class="container my-5">
+<!-- 8. Partner With Yatrik -->
+<section class="container my-5 py-4">
     <div class="text-center mb-5">
-        <h2>Partner With Yatrik</h2>
-        <p class="text-muted">Join our mission to provide the best pilgrimage experience.</p>
+        <h2 style="color: var(--maroon); font-weight: 800;">Partner With Yatrik</h2>
+        <p class="lead" style="color: var(--text-muted);">Join our mission to provide the best pilgrimage experience.</p>
     </div>
     <div class="row g-4">
         <div class="col-md-4">
-            <div class="yatrik-card p-4 text-center h-100">
-                <i class="bi bi-building fs-1 text-secondary mb-3"></i>
-                <h4>List Your Hotel</h4>
-                <p class="text-muted">Reach thousands of pilgrims daily.</p>
-                <a href="/register?type=PARTNER" class="btn btn-outline-dark w-100 mt-auto">Register Hotel</a>
+            <div class="yatrik-card p-5 text-center h-100 shadow-sm" style="border: 1px solid var(--border); border-radius: var(--radius);">
+                <i class="bi bi-building fs-1 mb-3" style="color: var(--maroon);"></i>
+                <h4 class="fw-bold">List Your Hotel</h4>
+                <p style="color: var(--text-muted);">Reach thousands of pilgrims daily seeking verified stays.</p>
+                <a href="/register?type=PARTNER" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-bold">Register Hotel</a>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="yatrik-card p-4 text-center h-100">
-                <i class="bi bi-shop fs-1 text-secondary mb-3"></i>
-                <h4>List Restaurant</h4>
-                <p class="text-muted">Showcase your pure veg menu.</p>
-                <a href="/register?type=PARTNER" class="btn btn-outline-dark w-100 mt-auto">Register Restaurant</a>
+            <div class="yatrik-card p-5 text-center h-100 shadow-sm" style="border: 1px solid var(--border); border-radius: var(--radius);">
+                <i class="bi bi-shop fs-1 mb-3" style="color: var(--maroon);"></i>
+                <h4 class="fw-bold">List Restaurant</h4>
+                <p style="color: var(--text-muted);">Showcase your pure veg and satvik menu to visitors.</p>
+                <a href="/register?type=PARTNER" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-bold">Register Restaurant</a>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="yatrik-card p-4 text-center h-100">
-                <i class="bi bi-car-front fs-1 text-secondary mb-3"></i>
-                <h4>Drive With Us</h4>
-                <p class="text-muted">Get verified and get more rides.</p>
-                <a href="/register?type=PARTNER" class="btn btn-outline-dark w-100 mt-auto">Register as Driver</a>
+            <div class="yatrik-card p-5 text-center h-100 shadow-sm" style="border: 1px solid var(--border); border-radius: var(--radius);">
+                <i class="bi bi-car-front fs-1 mb-3" style="color: var(--maroon);"></i>
+                <h4 class="fw-bold">Drive With Us</h4>
+                <p style="color: var(--text-muted);">Get verified by Yatrik and provide safe rides to devotees.</p>
+                <a href="/register?type=PARTNER" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-bold">Register as Driver</a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 10. FAQ -->
-<section class="container my-5 max-w-800" style="max-width: 800px; margin: 0 auto;">
-    <h2 class="mb-4 text-center">Frequently Asked Questions</h2>
-    <div class="accordion" id="faqAccordion">
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                    What is Yatrik?
-                </button>
-            </h2>
-            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                    Yatrik is a digital platform dedicated to the Braj region (Vrindavan, Mathura, Govardhan, etc.). We help pilgrims discover temples, plan their darshan, find verified stays, and organize their entire spiritual journey.
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                    How does verification work?
-                </button>
-            </h2>
-            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                    Our local team physically verifies properties and vehicles to ensure they meet basic safety, cleanliness, and service standards before granting a verified badge.
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                    How do I list my hotel?
-                </button>
-            </h2>
-            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                    Simply create a Partner account, navigate to your dashboard, and click 'Add Hotel'. Fill in your details, and our team will review your submission.
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                    Is it free to list?
-                </button>
-            </h2>
-            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                    Yes, basic listing is completely free for all partners.
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
-                    How do I contact support?
-                </button>
-            </h2>
-            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                    You can reach out to us via the <a href="/support">Support</a> page.
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 {% endblock %}

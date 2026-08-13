@@ -35,6 +35,8 @@ class Hotel(db.Model):
     # Audit
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
+    rating = db.Column(db.Float, default=0.0)
+    reviews_count = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return f"<Hotel {self.name}>"

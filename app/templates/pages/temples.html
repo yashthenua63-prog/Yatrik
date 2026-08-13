@@ -4,18 +4,18 @@
 {% block page_class %}temples-page{% endblock %}
 
 {% block content %}
-<div class="container my-5">
+<div class="container my-5 py-4">
     <div class="row align-items-center mb-5">
         <div class="col-md-8">
-            <h1 class="display-4 fw-bold">Temples of Braj</h1>
-            <p class="lead text-muted">Explore the divine abodes of Lord Krishna across Vrindavan, Mathura, and beyond.</p>
+            <h1 class="display-4 fw-bold" style="color: var(--maroon);">Temples of Braj</h1>
+            <p class="lead" style="color: var(--text-muted);">Explore the divine abodes of Lord Krishna across Vrindavan, Mathura, and beyond.</p>
         </div>
         <div class="col-md-4">
-            <form action="/search" method="GET" class="d-flex">
+            <form action="/search" method="GET" class="d-flex shadow-sm rounded-pill p-1" style="background-color: white; border: 1px solid var(--border);">
                 <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-start-0 ps-0" name="q" placeholder="Search temples...">
-                    <button class="btn btn-orange" type="submit">Search</button>
+                    <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-0 bg-transparent shadow-none" name="q" placeholder="Search temples...">
+                    <button class="btn btn-orange rounded-pill px-4 fw-bold" type="submit">Search</button>
                 </div>
             </form>
         </div>
@@ -26,17 +26,20 @@
         {% for temple in temples %}
         <div class="col-md-6 col-lg-4">
             <a href="/temples/{{ temple.id }}" class="text-decoration-none">
-                <div class="yatrik-card h-100">
-                    <img src="{{ temple.image_url or url_for('static', filename='images/default_temple.jpg') }}" class="card-img-top" alt="{{ temple.name }}">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h4 class="card-title text-dark mb-0">{{ temple.name }}</h4>
-                        </div>
-                        <p class="text-muted small mb-2"><i class="bi bi-geo-alt"></i> {{ temple.city }}</p>
+                <div class="yatrik-card h-100 border-0 shadow-sm" style="border-radius: var(--radius);">
+                    <img src="{{ temple.image_url or url_for('static', filename='images/' + temple.image) }}" 
+                         loading="lazy" 
+                         onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default_temple.jpg') }}';" 
+                         class="card-img-top object-fit-cover" 
+                         style="height: 220px;"
+                         alt="{{ temple.name }}">
+                    <div class="card-body p-4" style="background-color: white;">
+                        <h4 class="card-title fw-bold" style="color: var(--maroon);">{{ temple.name }}</h4>
+                        <p class="mb-3 fw-semibold" style="color: var(--text-primary);"><i class="bi bi-geo-alt" style="color: var(--saffron);"></i> {{ temple.city }}</p>
                         
-                        <div class="d-flex flex-column gap-1 small mt-3">
-                            <div class="text-secondary"><i class="bi bi-sunrise"></i> Morning: {{ temple.morning_darshan|default('Varied') }}</div>
-                            <div class="text-secondary"><i class="bi bi-sunset"></i> Evening: {{ temple.evening_darshan|default('Varied') }}</div>
+                        <div class="d-flex flex-column gap-2 small mt-3 p-3 rounded" style="background-color: var(--cream);">
+                            <div style="color: var(--text-primary);"><i class="bi bi-sunrise" style="color: var(--saffron);"></i> <span class="fw-bold">Morning:</span> {{ temple.morning_darshan|default('Varied') }}</div>
+                            <div style="color: var(--text-primary);"><i class="bi bi-sunset" style="color: var(--maroon);"></i> <span class="fw-bold">Evening:</span> {{ temple.evening_darshan|default('Varied') }}</div>
                         </div>
                     </div>
                 </div>
@@ -45,11 +48,11 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="empty-state">
-        <i class="bi bi-search"></i>
-        <h3>No Temples Found</h3>
-        <p>We couldn't find any temples matching your criteria. Please try a different search or check back later.</p>
-        <a href="/temples" class="btn btn-outline-dark mt-3">Clear Search</a>
+    <div class="empty-state shadow-sm" style="background-color: white; border: none;">
+        <i class="bi bi-search" style="color: var(--saffron);"></i>
+        <h3 style="color: var(--maroon);">No Temples Found</h3>
+        <p style="color: var(--text-muted);">We couldn't find any temples matching your criteria. Please try a different search or check back later.</p>
+        <a href="/temples" class="btn btn-outline-dark rounded-pill mt-3 px-4 fw-bold">Clear Search</a>
     </div>
     {% endif %}
 </div>

@@ -98,54 +98,61 @@ class TestHotelOwnership:
 
 
 class TestRestaurantOwnership:
-    def test_owner_can_edit_own_restaurant(self, client, db, partner_user_a, app):
+    def test_owner_can_edit_own_restaurant(self, client, db, restaurant_partner_a, app):
         """Owner can access the edit page for their own restaurant."""
-        r_id = create_restaurant(app, db, partner_user_a, "Owner A Restaurant")
-        login_as(client, "partner_a@yatrik.test", "partnerpass123")
+        r_id = create_restaurant(app, db, restaurant_partner_a, "Owner A Restaurant")
+        login_as(client, "rest_a@yatrik.test", "partnerpass123")
         resp = client.get(f"/partner/restaurant/{r_id}/edit")
         assert resp.status_code == 200
 
-    def test_owner_b_cannot_edit_owner_a_restaurant(self, client, db, partner_user_a, partner_user_b, app):
+    def test_owner_b_cannot_edit_owner_a_restaurant(self, client, db, restaurant_partner_a, restaurant_partner_b, app):
         """Restaurant Owner B MUST receive 403 for Owner A's restaurant."""
-        r_id = create_restaurant(app, db, partner_user_a, "A Restaurant For B Test")
-        login_as(client, "partner_b@yatrik.test", "partnerpass123")
+        r_id = create_restaurant(app, db, restaurant_partner_a, "A Restaurant For B Test")
+        login_as(client, "rest_b@yatrik.test", "partnerpass123")
         resp = client.get(f"/partner/restaurant/{r_id}/edit")
         assert resp.status_code == 403, (
             "CRITICAL: Partner B was allowed to access Partner A's restaurant!"
         )
 
-    def test_owner_b_cannot_post_to_owner_a_restaurant(self, client, db, partner_user_a, partner_user_b, app):
+    def test_owner_b_cannot_post_to_owner_a_restaurant(self, client, db, restaurant_partner_a, restaurant_partner_b, app):
         """Restaurant Owner B MUST NOT be able to POST edits to Owner A's restaurant."""
-        r_id = create_restaurant(app, db, partner_user_a, "A Restaurant Post Test")
-        login_as(client, "partner_b@yatrik.test", "partnerpass123")
+        r_id = create_restaurant(app, db, restaurant_partner_a, "A Restaurant Post Test")
+        login_as(client, "rest_b@yatrik.test", "partnerpass123")
         resp = client.post(f"/partner/restaurant/{r_id}/edit", data={
             "name": "Hacked Restaurant",
             "city": "Vrindavan",
         })
         assert resp.status_code == 403
 
+    def test_owner_b_cannot_add_food_category_to_owner_a_restaurant(self, client, db, restaurant_partner_a, restaurant_partner_b, app):
+        """Restaurant Owner B MUST NOT be able to POST food category to Owner A's restaurant."""
+        r_id = create_restaurant(app, db, restaurant_partner_a, "A Food Category Test")
+        login_as(client, "rest_b@yatrik.test", "partnerpass123")
+        resp = client.post(f"/partner/restaurant/{r_id}/categories", data={
+            "name": "Hacked Category",
+        })
+        assert resp.status_code == 403
+
 
 class TestPartnerDashboardAccess:
     def test_traveler_cannot_access_partner_dashboard(self, client, db, traveler_user):
-        """Traveler role MUST NOT access the partner dashboard."""
+        """Traveler role MUST NOT access the partner dashboards."""
         login_as(client, "traveler@yatrik.test", "travelerpass123")
-        resp = client.get("/partner/dashboard", follow_redirects=False)
-        # Should redirect away (not 200 to the dashboard)
-        assert resp.status_code != 200 or b"not authorized" in (
-            client.get("/partner/dashboard", follow_redirects=True).data
-        )
+        for endpoint in ["driver", "hotel", "restaurant"]:
+            resp = client.get(f"/partner/{endpoint}/dashboard", follow_redirects=False)
+            assert resp.status_code == 403 or resp.status_code == 302
 
     def test_unauthenticated_cannot_access_partner_dashboard(self, client, db):
         """Unauthenticated users must be redirected to login."""
-        resp = client.get("/partner/dashboard", follow_redirects=False)
-        assert resp.status_code == 302
-        assert "login" in resp.headers.get("Location", "")
+        for endpoint in ["driver", "hotel", "restaurant"]:
+            resp = client.get(f"/partner/{endpoint}/dashboard", follow_redirects=False)
+            assert resp.status_code == 302
+            assert "login" in resp.headers.get("Location", "")
 
     def test_admin_cannot_access_partner_dashboard_as_partner(self, client, db, admin_user):
         """Admin is redirected to admin panel, not partner dashboard."""
         login_as(client, "admin@yatrik.test", "adminpass123")
-        resp = client.get("/partner/dashboard", follow_redirects=False)
-        # Admin should be redirected to admin panel
-        assert resp.status_code == 302
-        location = resp.headers.get("Location", "")
-        assert "admin" in location
+        for endpoint in ["driver", "hotel", "restaurant"]:
+            resp = client.get(f"/partner/{endpoint}/dashboard", follow_redirects=False)
+            assert resp.status_code == 302
+            assert "admin" in resp.headers.get("Location", "")

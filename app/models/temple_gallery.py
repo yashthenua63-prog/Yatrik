@@ -25,6 +25,18 @@ class TempleGallery(db.Model):
     )
 
 
+    is_video = db.Column(
+        db.Boolean,
+        default=False
+    )
+
+
+    video_url = db.Column(
+        db.String(255),
+        nullable=True
+    )
+
+
     created_at = db.Column(
         db.DateTime,
         server_default=db.func.now()

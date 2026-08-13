@@ -2,20 +2,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
-  --saffron: hsl(27, 95%, 52%);        /* Primary orange/saffron #F77B20 */
-  --saffron-light: hsl(27, 100%, 95%);
-  --saffron-dark: hsl(27, 90%, 40%);
-  --maroon: hsl(0, 62%, 30%);          /* Deep red/maroon */
-  --maroon-light: hsl(0, 62%, 95%);
-  --sage: hsl(145, 30%, 40%);          /* Muted sage green */
-  --gold: hsl(45, 90%, 48%);           /* Gold */
-  --cream: hsl(40, 30%, 97%);          /* Off-white background */
-  --text-primary: hsl(220, 15%, 15%);
-  --text-muted: hsl(220, 10%, 50%);
-  --border: hsl(220, 15%, 90%);
-  --card-shadow: 0 2px 16px hsl(220 15% 15% / 0.07);
-  --card-shadow-hover: 0 8px 32px hsl(220 15% 15% / 0.14);
-  --radius: 12px;
+  --saffron: #FF9933;        /* Primary orange/saffron */
+  --saffron-light: #FFCC99;
+  --saffron-dark: #CC6600;
+  --maroon: #800000;          /* Deep red/maroon */
+  --maroon-light: #A33333;
+  --sage: #4E6E5D;          /* Muted sage green */
+  --gold: #FFD700;           /* Gold */
+  --cream: #FFFDD0;          /* Off-white background */
+  --text-primary: #333333;
+  --text-muted: #666666;
+  --border: #E6E6E6;
+  --card-shadow: 0 4px 20px rgba(51, 51, 51, 0.08);
+  --card-shadow-hover: 0 12px 30px rgba(51, 51, 51, 0.15);
+  --radius: 16px;
   --radius-sm: 8px;
   --radius-pill: 50px;
 }

@@ -54,9 +54,9 @@ class TestHotelOnboarding:
 
 
 class TestRestaurantOnboarding:
-    def test_partner_can_add_restaurant(self, client, db, partner_user_a, app):
+    def test_partner_can_add_restaurant(self, client, db, restaurant_partner_a, app):
         """Partner can submit a restaurant for verification."""
-        login_as(client, "partner_a@yatrik.test", "partnerpass123")
+        login_as(client, "rest_a@yatrik.test", "partnerpass123")
         resp = client.post("/partner/onboard/restaurant", data={
             "name": "Satvik Bhojanalay",
             "cuisine": "Pure Veg",
@@ -71,9 +71,9 @@ class TestRestaurantOnboarding:
 
 
 class TestDriverOnboarding:
-    def test_partner_can_register_as_driver(self, client, db, partner_user_a, app):
+    def test_partner_can_register_as_driver(self, client, db, driver_partner, app):
         """Partner can register as a driver."""
-        login_as(client, "partner_a@yatrik.test", "partnerpass123")
+        login_as(client, "driver@yatrik.test", "partnerpass123")
         resp = client.post("/partner/onboard/driver", data={
             "name": "Ramesh Driver",
             "phone": "7777777777",
@@ -88,15 +88,23 @@ class TestDriverOnboarding:
             assert driver.verification_status == "PENDING"
             assert driver.status == "OFFLINE"
 
-    def test_duplicate_driver_prevented(self, client, db, partner_user_a, partner_user_b, app):
+    def test_duplicate_driver_prevented(self, client, db, driver_partner, app):
         """Two drivers cannot share the same phone number."""
-        login_as(client, "partner_a@yatrik.test", "partnerpass123")
+        login_as(client, "driver@yatrik.test", "partnerpass123")
         client.post("/partner/onboard/driver", data={
             "name": "Driver A", "phone": "6666666666",
             "vehicle_type": "Auto", "vehicle_number": "UP85AA0001"
         })
         client.get("/auth/logout")
-        login_as(client, "partner_b@yatrik.test", "partnerpass123")
+        
+        with app.app_context():
+            from app.models import User
+            user2 = User(name="Driver B", email="driver_b@yatrik.test", role="DRIVER")
+            user2.set_password("partnerpass123")
+            db.session.add(user2)
+            db.session.commit()
+            
+        login_as(client, "driver_b@yatrik.test", "partnerpass123")
         resp = client.post("/partner/onboard/driver", data={
             "name": "Driver B", "phone": "6666666666",
             "vehicle_type": "E-Rickshaw", "vehicle_number": "UP85BB9999"

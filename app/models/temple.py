@@ -85,6 +85,8 @@ class Temple(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
     verification_status = db.Column(db.String(20), default="PUBLISHED")
+    rating = db.Column(db.Float, default=0.0)
+    reviews_count = db.Column(db.Integer, default=0)
 
 
     def __repr__(self):

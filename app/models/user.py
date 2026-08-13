@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(150), nullable=False)
     
-    role = db.Column(db.String(20), default="TRAVELER") # ADMIN, PARTNER, TRAVELER
+    role = db.Column(db.String(20), default="TRAVELER") # ADMIN, TRAVELER, DRIVER, HOTEL_PARTNER, RESTAURANT_PARTNER
     is_active = db.Column(db.Boolean, default=True)
     
     # Audit
@@ -28,8 +28,16 @@ class User(UserMixin, db.Model):
         return self.role == "ADMIN"
         
     @property
-    def is_partner(self):
-        return self.role == "PARTNER"
+    def is_driver(self):
+        return self.role == "DRIVER"
+
+    @property
+    def is_hotel_partner(self):
+        return self.role == "HOTEL_PARTNER"
+
+    @property
+    def is_restaurant_partner(self):
+        return self.role == "RESTAURANT_PARTNER"
 
     def __repr__(self):
         return f"<User {self.email}>"

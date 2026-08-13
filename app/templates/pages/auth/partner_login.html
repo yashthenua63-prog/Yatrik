@@ -1,0 +1,52 @@
+{% extends "layouts/base.html" %}
+
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block page_class %}auth-page{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-5">
+            <div class="yatrik-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h1 class="h2 mb-2">{{ title }} Login</h1>
+                    <p class="text-muted">Login to manage your business with Yatrik</p>
+                </div>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="{{ post_url }}">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required autofocus>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between">
+                            <label for="password" class="form-label">Password</label>
+                            <a href="#" class="text-decoration-none small text-muted">Forgot password?</a>
+                        </div>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-orange w-100 py-2 mb-3">Login</button>
+                    
+                    <div class="text-center">
+                        <p class="text-muted small">Don't have a partner account? <a href="{{ register_url }}" class="text-decoration-none fw-bold">Register here</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

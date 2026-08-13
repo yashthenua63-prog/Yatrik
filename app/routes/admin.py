@@ -23,9 +23,9 @@ def setup_admin(app):
     from app.models import (
         Temple, Place, Category, Hotel, Restaurant,
         Driver, FareRule, Ride,
-        User, Document, Review,
+        User, Document, Review, ClaimRequest,
         Event, FoodTrail, FoodTrailStop,
-        SupportTicket, LocalSeller
+        SupportTicket, LocalSeller, FoodCategory, FoodItem
     )
 
     admin = Admin(app, name='Yatrik Admin', url='/admin-yatrik-secret', index_view=SecureAdminIndexView(url='/admin-yatrik-secret'))
@@ -103,6 +103,8 @@ def setup_admin(app):
     admin.add_view(SecureModelView(Category, db.session, name="Categories", category="Content", endpoint="admin_categories"))
     admin.add_view(LocalSellerView(LocalSeller, db.session, name="Local Sellers", category="Content", endpoint="admin_local_sellers"))
     admin.add_view(SecureModelView(Review, db.session, name="Reviews", category="Content", endpoint="admin_reviews"))
+    admin.add_view(SecureModelView(FoodCategory, db.session, name="Food Categories", category="Content", endpoint="admin_food_categories"))
+    admin.add_view(SecureModelView(FoodItem, db.session, name="Food Items", category="Content", endpoint="admin_food_items"))
 
     # ── Events & Trails ───────────────────────────────────────────────────────
     admin.add_view(EventView(Event, db.session, name="Events", category="Events", endpoint="admin_events"))
@@ -117,6 +119,7 @@ def setup_admin(app):
     # ── Auth & Trust ──────────────────────────────────────────────────────────
     admin.add_view(SecureModelView(User, db.session, name="Users", category="Auth", endpoint="admin_users"))
     admin.add_view(SecureModelView(Document, db.session, name="Documents", category="Auth", endpoint="admin_documents"))
+    admin.add_view(SecureModelView(ClaimRequest, db.session, name="Claim Requests", category="Auth", endpoint="admin_claim_requests"))
 
     # ── Support ───────────────────────────────────────────────────────────────
     admin.add_view(SupportView(SupportTicket, db.session, name="Support Tickets", category="Support", endpoint="admin_support"))

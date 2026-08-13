@@ -22,18 +22,17 @@ class TestRegistration:
             assert user is not None
             assert user.role == "TRAVELER"
 
-    def test_register_partner(self, client, db, app):
-        """Partner registration creates a PARTNER user."""
-        client.post("/auth/register", data={
-            "name": "Test Partner",
-            "email": "partner_reg@test.com",
+    def test_register_hotel_partner(self, client, db, app):
+        """Hotel partner registration creates a HOTEL_PARTNER user."""
+        client.post("/auth/hotel/register", data={
+            "name": "Test Hotel Partner",
+            "email": "hotel_partner_reg@test.com",
             "password": "securepass123",
-            "account_type": "PARTNER",
         })
         with app.app_context():
-            user = User.query.filter_by(email="partner_reg@test.com").first()
+            user = User.query.filter_by(email="hotel_partner_reg@test.com").first()
             assert user is not None
-            assert user.role == "PARTNER"
+            assert user.role == "HOTEL_PARTNER"
 
     def test_password_is_hashed(self, client, db, app):
         """Passwords must never be stored in plaintext."""
