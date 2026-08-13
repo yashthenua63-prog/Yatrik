@@ -29,9 +29,9 @@
             <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
                 <h5 class="mb-3 text-white">Partners</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="/register?type=PARTNER" class="text-light text-decoration-none opacity-75 custom-hover">List Hotel</a></li>
-                    <li class="mb-2"><a href="/register?type=PARTNER" class="text-light text-decoration-none opacity-75 custom-hover">List Restaurant</a></li>
-                    <li class="mb-2"><a href="/register?type=PARTNER" class="text-light text-decoration-none opacity-75 custom-hover">Become Driver</a></li>
+                    <li class="mb-2"><a href="{{ url_for('auth.hotel_register') }}" class="text-light text-decoration-none opacity-75 custom-hover">List Hotel</a></li>
+                    <li class="mb-2"><a href="{{ url_for('auth.restaurant_register') }}" class="text-light text-decoration-none opacity-75 custom-hover">List Restaurant</a></li>
+                    <li class="mb-2"><a href="{{ url_for('auth.driver_register') }}" class="text-light text-decoration-none opacity-75 custom-hover">Become Driver</a></li>
                 </ul>
             </div>
 

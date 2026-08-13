@@ -11,7 +11,7 @@
         <div class="d-flex flex-wrap justify-content-center gap-3">
             <a href="/temples" class="btn btn-orange rounded-pill px-5 py-3 fs-5 shadow-sm fw-bold">Explore Temples</a>
             <a href="/plan-my-trip" class="btn rounded-pill px-5 py-3 fs-5 shadow-sm fw-bold" style="background-color: var(--maroon); color: white;">Plan My Trip</a>
-            <a href="/hotels" class="btn btn-outline-dark rounded-pill px-5 py-3 fs-5 shadow-sm fw-bold" style="border-color: var(--text-primary);">Find Stays</a>
+            <a href="{{ url_for('hotels.hotels_list') }}" class="btn btn-outline-dark rounded-pill px-5 py-3 fs-5 shadow-sm fw-bold" style="border-color: var(--text-primary);">Find Stays</a>
         </div>
     </div>
 </section>
@@ -108,7 +108,7 @@
 <section class="container my-5 py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 style="color: var(--maroon); font-weight: 800;">Trusted Stays in Braj</h2>
-        <a href="/hotels" class="btn btn-outline-dark rounded-pill">View All</a>
+        <a href="{{ url_for('hotels.hotels_list') }}" class="btn btn-outline-dark rounded-pill">View All</a>
     </div>
     
     {% if hotels %}
@@ -139,7 +139,7 @@
         <i class="bi bi-house"></i>
         <h3>List Your Property</h3>
         <p>Partner with Yatrik and reach thousands of pilgrims.</p>
-        <a href="/partner/register" class="btn btn-orange rounded-pill mt-3 px-4">List Now</a>
+        <a href="{{ url_for('auth.hotel_register') }}" class="btn btn-orange rounded-pill mt-3 px-4">List Now</a>
     </div>
     {% endif %}
 </section>
@@ -148,7 +148,7 @@
 <section class="container my-5 py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 style="color: var(--maroon); font-weight: 800;">Pure Veg Food & Prasad</h2>
-        <a href="/restaurants" class="btn btn-outline-dark rounded-pill">View All</a>
+        <a href="{{ url_for('restaurants.restaurants_list') }}" class="btn btn-outline-dark rounded-pill">View All</a>
     </div>
     
     {% if restaurants %}
@@ -175,7 +175,7 @@
         <i class="bi bi-shop"></i>
         <h3>No restaurants listed yet</h3>
         <p>Are you a restaurant owner? List your pure veg restaurant.</p>
-        <a href="/partner/register" class="btn btn-orange rounded-pill mt-3 px-4">List Now</a>
+        <a href="{{ url_for('auth.restaurant_register') }}" class="btn btn-orange rounded-pill mt-3 px-4">List Now</a>
     </div>
     {% endif %}
 </section>
@@ -228,7 +228,7 @@
                 <i class="bi bi-building fs-1 mb-3" style="color: var(--maroon);"></i>
                 <h4 class="fw-bold">List Your Hotel</h4>
                 <p style="color: var(--text-muted);">Reach thousands of pilgrims daily seeking verified stays.</p>
-                <a href="/register?type=PARTNER" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-bold">Register Hotel</a>
+                <a href="{{ url_for('auth.hotel_register') }}" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-bold">Register Hotel</a>
             </div>
         </div>
         <div class="col-md-4">
@@ -236,7 +236,7 @@
                 <i class="bi bi-shop fs-1 mb-3" style="color: var(--maroon);"></i>
                 <h4 class="fw-bold">List Restaurant</h4>
                 <p style="color: var(--text-muted);">Showcase your pure veg and satvik menu to visitors.</p>
-                <a href="/register?type=PARTNER" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-bold">Register Restaurant</a>
+                <a href="{{ url_for('auth.restaurant_register') }}" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-bold">Register Restaurant</a>
             </div>
         </div>
         <div class="col-md-4">
@@ -244,7 +244,7 @@
                 <i class="bi bi-car-front fs-1 mb-3" style="color: var(--maroon);"></i>
                 <h4 class="fw-bold">Drive With Us</h4>
                 <p style="color: var(--text-muted);">Get verified by Yatrik and provide safe rides to devotees.</p>
-                <a href="/register?type=PARTNER" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-bold">Register as Driver</a>
+                <a href="{{ url_for('auth.driver_register') }}" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-bold">Register as Driver</a>
             </div>
         </div>
     </div>
