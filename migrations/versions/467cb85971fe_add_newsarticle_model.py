@@ -30,7 +30,7 @@ def upgrade():
     sa.Column('source_name', sa.String(length=255), nullable=True),
     sa.Column('source_url', sa.String(length=500), nullable=True),
     sa.Column('published_at', sa.DateTime(), nullable=True),
-    sa.Column('collected_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('collected_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
     sa.Column('last_checked_at', sa.DateTime(), nullable=True),
     sa.Column('image', sa.String(length=255), nullable=True),
     sa.Column('seo_title', sa.String(length=200), nullable=True),
@@ -38,8 +38,8 @@ def upgrade():
     sa.Column('canonical_url', sa.String(length=255), nullable=True),
     sa.Column('status', sa.String(length=20), nullable=True),
     sa.Column('is_featured', sa.Boolean(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.Column('updated_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_news_articles'))
     )
     with op.batch_alter_table('news_articles', schema=None) as batch_op:

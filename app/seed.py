@@ -126,10 +126,7 @@ def seed_temples():
             if not temple:
                 temple = Temple(**data)
                 db.session.add(temple)
-            else:
-                for key, value in data.items():
-                    setattr(temple, key, value)
-        
+
         db.session.commit()
 
         print("✅ Yatrik temples seeded/updated successfully.")
