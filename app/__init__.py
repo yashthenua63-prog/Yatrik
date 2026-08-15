@@ -57,8 +57,13 @@ def create_app(config_name="default"):
     app.register_blueprint(support_bp)
     app.register_blueprint(destinations_bp)
     
+    # Initialize Admin
     from app.routes.admin import setup_admin
     setup_admin(app)
+    
+    # Register CLI Commands
+    from app.cli import register_cli_commands
+    register_cli_commands(app)
 
     @app.route("/health")
     def health():

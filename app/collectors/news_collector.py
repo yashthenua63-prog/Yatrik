@@ -3,6 +3,24 @@ from app.models.news import NewsArticle
 from app.models.collector import DiscoveredEntity
 from app.database import db
 
+# ==========================================
+# NEWS SOURCES CONFIGURATION
+# Add legitimate public sources here.
+# DO NOT add unsupported/fake sources.
+# ==========================================
+NEWS_SOURCES = [
+    # Example structure (Disabled until verified):
+    # {
+    #     "name": "UP Tourism Mathura",
+    #     "url": "https://uptourism.gov.in/en/mathura",
+    #     "type": "Tourism Department",
+    #     "location": "Mathura",
+    #     "enabled": False,
+    #     "rate_limit": 1.0,  # seconds
+    #     "timeout": 10       # seconds
+    # }
+]
+
 class NewsCollector(BaseCollector):
     def check_duplicate(self, title, city):
         existing = NewsArticle.query.filter(
