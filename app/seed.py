@@ -9,8 +9,9 @@ app = create_app()
 def seed_temples():
     with app.app_context():
 
-        # Create database tables if they don't exist
-        db.create_all()
+        # Removed db.create_all() to prevent hybrid schema issues in production
+        # Alembic (flask db upgrade) must be solely responsible for schema creation.
+        print("Starting Temple seed process...")
 
         temples_data = [
 
@@ -88,7 +89,7 @@ def seed_temples():
                 "latitude": 27.5842125,
                 "longitude": 77.6979595
             },
-            
+
             {
                 "name": "Shri Krishna Janmasthan",
                 "city": "Mathura",
@@ -103,7 +104,7 @@ def seed_temples():
                 "latitude": 27.5049514,
                 "longitude": 77.6698642
             },
-            
+
             {
                 "name": "Dwarkadhish Temple",
                 "city": "Mathura",

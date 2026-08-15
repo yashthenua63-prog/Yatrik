@@ -6,8 +6,9 @@ app = create_app()
 
 def seed_gallery():
     with app.app_context():
-        # Make sure tables exist
-        db.create_all()
+        # Removed db.create_all() to prevent hybrid schema issues in production
+        # Alembic (flask db upgrade) must be solely responsible for schema creation.
+        print("Starting Temple Gallery seed process...")
 
         # Find Prem Mandir
         prem_mandir = Temple.query.filter_by(name="Prem Mandir").first()
@@ -32,17 +33,17 @@ def seed_gallery():
 
         for data in gallery_data:
             existing = TempleGallery.query.filter_by(
-                temple_id=data["temple_id"], 
+                temple_id=data["temple_id"],
                 image=data["image"]
             ).first()
-            
+
             if not existing:
                 item = TempleGallery(**data)
                 db.session.add(item)
             else:
                 existing.is_video = data["is_video"]
                 existing.video_url = data["video_url"]
-        
+
         db.session.commit()
         print("✅ Temple gallery seeded successfully.")
 
