@@ -15,9 +15,13 @@
     <!-- SEO Description -->
     <meta
         name="description"
-        content="{% block meta_description %}Yatrik is an AI-powered pilgrimage platform to discover temples, darshan timings and sacred places across Braj and Vrindavan.{% endblock %}"
+        content="{% if seo and seo.description %}{{ seo.description }}{% else %}{% block meta_description %}Yatrik is an AI-powered pilgrimage platform to discover temples, darshan timings and sacred places across Braj and Vrindavan.{% endblock %}{% endif %}"
     >
+    {% if seo and seo.robots %}
+    <meta name="robots" content="{{ seo.robots }}">
+    {% else %}
     {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+    {% endif %}
 
     <!-- SEO Keywords -->
     <meta
@@ -27,43 +31,52 @@
 
     <meta name="theme-color" content="#FF9933">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}Yatrik Vrindavan – Temple Guide, Darshan & Timings{% endblock %}">
-    <meta name="twitter:description" content="{% block twitter_description %}Explore Vrindavan temples, darshan timings and pilgrimage information with Yatrik.{% endblock %}">
+    <meta name="twitter:title" content="{% if seo and seo.title %}{{ seo.title }}{% else %}{% block twitter_title %}Yatrik Vrindavan – Temple Guide, Darshan & Timings{% endblock %}{% endif %}">
+    <meta name="twitter:description" content="{% if seo and seo.description %}{{ seo.description }}{% else %}{% block twitter_description %}Explore Vrindavan temples, darshan timings and pilgrimage information with Yatrik.{% endblock %}{% endif %}">
+    {% if seo and seo.og_image %}
+    <meta name="twitter:image" content="{{ seo.og_image }}">
+    {% endif %}
 
     <meta name="author" content="Yatrik">
 
     <!-- Page Title -->
     <title>
-        {% block title %}
-        Yatrik Vrindavan – Temple Guide, Darshan & Timings
-        {% endblock %}
+        {% if seo and seo.title %}
+        {{ seo.title }}
+        {% else %}
+        {% block title %}Yatrik Vrindavan – Temple Guide, Darshan & Timings{% endblock %}
+        {% endif %}
     </title>
 
     <!-- Canonical URL -->
     <link
         rel="canonical"
-        href="{% block canonical_url %}https://yatrik-rw1u.onrender.com/{% endblock %}"
+        href="{% if seo and seo.canonical %}{{ seo.canonical }}{% else %}{% block canonical_url %}{{ config.BASE_URL }}{{ request.path }}{% endblock %}{% endif %}"
     >
 
     <!-- Open Graph -->
     <meta
         property="og:title"
-        content="{% block og_title %}Yatrik Vrindavan – Temple Guide, Darshan & Timings{% endblock %}"
+        content="{% if seo and seo.title %}{{ seo.title }}{% else %}{% block og_title %}Yatrik Vrindavan – Temple Guide, Darshan & Timings{% endblock %}{% endif %}"
     >
 
     <meta
         property="og:description"
-        content="{% block og_description %}Explore Vrindavan temples, darshan timings and pilgrimage information with Yatrik.{% endblock %}"
+        content="{% if seo and seo.description %}{{ seo.description }}{% else %}{% block og_description %}Explore Vrindavan temples, darshan timings and pilgrimage information with Yatrik.{% endblock %}{% endif %}"
     >
 
     <meta
         property="og:url"
-        content="{% block og_url %}https://yatrik-rw1u.onrender.com/{% endblock %}"
+        content="{% if seo and seo.canonical %}{{ seo.canonical }}{% else %}{% block og_url %}{{ config.BASE_URL }}{{ request.path }}{% endblock %}{% endif %}"
     >
+    
+    {% if seo and seo.og_image %}
+    <meta property="og:image" content="{{ seo.og_image }}">
+    {% endif %}
 
     <meta
         property="og:type"
-        content="website"
+        content="{% if seo and seo.type %}{{ seo.type }}{% else %}website{% endif %}"
     >
 
     <meta

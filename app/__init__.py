@@ -30,6 +30,7 @@ def create_app(config_name="default"):
     from app.routes.auth import auth_bp
     from app.routes.partner import partner_bp
     from app.routes.static_pages import static_pages_bp
+    from app.routes.news import news_bp
     
     app.register_blueprint(main_bp)
     app.register_blueprint(user_bp)
@@ -40,17 +41,21 @@ def create_app(config_name="default"):
     app.register_blueprint(auth_bp)
     app.register_blueprint(partner_bp)
     app.register_blueprint(static_pages_bp)
+    app.register_blueprint(news_bp)
     
     from app.routes.events import events_bp
     from app.routes.food_trails import food_trails_bp
     from app.routes.darshan_planner import darshan_planner_bp
     from app.routes.braj_trip_os import braj_trip_os_bp
     from app.routes.support import support_bp
+    from app.routes.destinations import destinations_bp
+    
     app.register_blueprint(events_bp)
     app.register_blueprint(food_trails_bp)
     app.register_blueprint(darshan_planner_bp)
     app.register_blueprint(braj_trip_os_bp)
     app.register_blueprint(support_bp)
+    app.register_blueprint(destinations_bp)
     
     from app.routes.admin import setup_admin
     setup_admin(app)

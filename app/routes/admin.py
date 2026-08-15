@@ -25,7 +25,8 @@ def setup_admin(app):
         Driver, FareRule, Ride,
         User, Document, Review, ClaimRequest,
         Event, FoodTrail, FoodTrailStop,
-        SupportTicket, LocalSeller, FoodCategory, FoodItem
+        SupportTicket, LocalSeller, FoodCategory, FoodItem,
+        DiscoveredEntity, CollectorLog, NewsArticle
     )
 
     admin = Admin(app, name='Yatrik Admin', url='/admin-yatrik-secret', index_view=SecureAdminIndexView(url='/admin-yatrik-secret'))
@@ -94,6 +95,20 @@ def setup_admin(app):
     class LocalSellerView(SecureModelView):
         column_searchable_list = ['name', 'city']
         column_filters = ['verification_status', 'category']
+        
+    class DiscoveredEntityView(SecureModelView):
+        column_searchable_list = ['name', 'city', 'source_url']
+        column_filters = ['status', 'entity_type', 'city']
+        form_choices = {
+            'status': [('PENDING', 'Pending'), ('APPROVED', 'Approved'), ('REJECTED', 'Rejected'), ('DUPLICATE', 'Duplicate')]
+        }
+
+    class NewsArticleView(SecureModelView):
+        column_searchable_list = ['title', 'city', 'category']
+        column_filters = ['status', 'city', 'category']
+        form_choices = {
+            'status': [('DRAFT', 'Draft'), ('REVIEW', 'Review'), ('PUBLISHED', 'Published'), ('UPDATED', 'Updated'), ('ARCHIVED', 'Archived')]
+        }
 
     # ── Content ──────────────────────────────────────────────────────────────
     admin.add_view(TempleView(Temple, db.session, name="Temples", category="Content", endpoint="admin_temples"))
@@ -105,6 +120,11 @@ def setup_admin(app):
     admin.add_view(SecureModelView(Review, db.session, name="Reviews", category="Content", endpoint="admin_reviews"))
     admin.add_view(SecureModelView(FoodCategory, db.session, name="Food Categories", category="Content", endpoint="admin_food_categories"))
     admin.add_view(SecureModelView(FoodItem, db.session, name="Food Items", category="Content", endpoint="admin_food_items"))
+    admin.add_view(NewsArticleView(NewsArticle, db.session, name="News & Updates", category="Content", endpoint="admin_news"))
+
+    # ── Collector ────────────────────────────────────────────────────────────
+    admin.add_view(DiscoveredEntityView(DiscoveredEntity, db.session, name="Review Queue", category="Discovery", endpoint="admin_discovery_queue"))
+    admin.add_view(SecureModelView(CollectorLog, db.session, name="Collector Logs", category="Discovery", endpoint="admin_collector_logs"))
 
     # ── Events & Trails ───────────────────────────────────────────────────────
     admin.add_view(EventView(Event, db.session, name="Events", category="Events", endpoint="admin_events"))

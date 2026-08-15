@@ -1,0 +1,81 @@
+{% extends "layouts/base.html" %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TouristDestination",
+  "name": "Mathura",
+  "description": "{{ seo.description }}",
+  "url": "{{ seo.canonical }}"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "{{ config.BASE_URL }}"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Uttar Pradesh",
+    "item": "{{ config.BASE_URL }}/uttar-pradesh"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Braj",
+    "item": "{{ config.BASE_URL }}/braj"
+  },{
+    "@type": "ListItem",
+    "position": 4,
+    "name": "Mathura"
+  }]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/braj">Braj</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Mathura</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">Mathura Travel Guide 2026</h1>
+    <p class="lead">Mathura is the birthplace of Lord Krishna and one of the seven most sacred cities in Hinduism.</p>
+
+    <h2 class="mt-5 mb-3">Top Temples in Mathura</h2>
+    <div class="row g-4">
+        {% for temple in temples %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                {% if temple.image %}
+                <img src="{{ temple.image }}" class="card-img-top" alt="{{ temple.name }} in Mathura">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ temple.name }}</h5>
+                    <p class="card-text">{{ temple.description[:100] }}...</p>
+                    <a href="/mathura/temples/{{ temple.id }}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-5 p-4 bg-light rounded">
+        <h3>Explore More on Yatrik</h3>
+        <ul class="list-unstyled mt-3">
+            <li><i class="bi bi-arrow-right"></i> <a href="/mathura/temples">All Mathura Temples</a></li>
+            <li><i class="bi bi-arrow-right"></i> <a href="/vrindavan">Vrindavan Travel Guide</a></li>
+            <li><i class="bi bi-arrow-right"></i> <a href="/braj">Braj Circuit Guide</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

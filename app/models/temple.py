@@ -81,6 +81,19 @@ class Temple(db.Model):
     best_time_to_visit = db.Column(db.String(100))
     important_notes = db.Column(db.Text)
 
+    # ==========================================
+    # PHASE 2: SEO & CONTENT FIELDS
+    # ==========================================
+    slug = db.Column(db.String(200), unique=True, index=True)
+    seo_title = db.Column(db.String(200))
+    seo_description = db.Column(db.Text)
+    canonical_url = db.Column(db.String(255))
+    
+    history = db.Column(db.Text)
+    significance = db.Column(db.Text)
+    how_to_reach = db.Column(db.Text)
+    faqs = db.Column(db.JSON)
+    is_featured = db.Column(db.Boolean, default=False)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())

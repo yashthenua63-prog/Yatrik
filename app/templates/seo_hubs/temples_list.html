@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/{{ city.lower() }}">{{ city }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Temples</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">Best Temples in {{ city }}</h1>
+    
+    <div class="row g-4">
+        {% for temple in temples %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                {% if temple.image %}
+                <img src="{{ temple.image }}" class="card-img-top" alt="{{ temple.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ temple.name }}</h5>
+                    <p class="text-muted small">
+                        {% if temple.opening_time and temple.closing_time %}
+                        <i class="bi bi-clock"></i> {{ temple.opening_time.strftime('%I:%M %p') }} - {{ temple.closing_time.strftime('%I:%M %p') }}
+                        {% endif %}
+                    </p>
+                    <a href="/{{ city.lower() }}/temples/{{ temple.id }}" class="btn btn-outline-primary">Darshan Guide</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

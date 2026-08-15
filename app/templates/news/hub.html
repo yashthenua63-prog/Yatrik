@@ -1,0 +1,56 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            {% if location != 'All' %}
+            <li class="breadcrumb-item"><a href="/{{ location.lower() }}">{{ location }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">News & Updates</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">{{ location }} News, Travel & Temple Updates</h1>
+    <p class="lead">Stay informed with the latest updates on temple timings, festivals, and travel advisories.</p>
+
+    <div class="row mt-4">
+        <div class="col-lg-8">
+            {% if articles %}
+                {% for article in articles %}
+                <div class="card mb-4 shadow-sm border-0">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">{{ article.category }}</span>
+                        <h2 class="h4 card-title"><a href="/news/{{ article.slug }}/" class="text-decoration-none text-dark">{{ article.title }}</a></h2>
+                        <p class="card-text text-muted small">
+                            <i class="bi bi-calendar"></i> Published: {{ article.published_at.strftime('%b %d, %Y') if article.published_at else 'Recent' }}
+                            {% if article.city %} | <i class="bi bi-geo-alt"></i> {{ article.city }}{% endif %}
+                        </p>
+                        <p class="card-text">{{ article.summary }}</p>
+                        <a href="/news/{{ article.slug }}/" class="btn btn-outline-primary btn-sm">Read Full Update</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    No major verified updates for {{ location }} today. Check back later for the latest news!
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card bg-light border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h5 class="card-title">Filter by Location</h5>
+                    <ul class="list-unstyled mt-3">
+                        <li><a href="/news/" class="text-decoration-none">All Braj Region</a></li>
+                        <li><a href="/mathura/news/" class="text-decoration-none">Mathura Updates</a></li>
+                        <li><a href="/vrindavan/news/" class="text-decoration-none">Vrindavan Updates</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

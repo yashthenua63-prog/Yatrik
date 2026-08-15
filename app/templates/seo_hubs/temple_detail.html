@@ -1,0 +1,98 @@
+{% extends "layouts/base.html" %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TouristAttraction",
+  "name": "{{ temple.name }}",
+  "description": "{{ seo.description }}",
+  "url": "{{ seo.canonical }}",
+  "image": "{{ temple.image }}",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "{{ temple.city }}",
+    "addressRegion": "Uttar Pradesh",
+    "addressCountry": "IN"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "{{ config.BASE_URL }}"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "{{ temple.city }}",
+    "item": "{{ config.BASE_URL }}/{{ temple.city.lower() }}"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Temples",
+    "item": "{{ config.BASE_URL }}/{{ temple.city.lower() }}/temples"
+  },{
+    "@type": "ListItem",
+    "position": 4,
+    "name": "{{ temple.name }}"
+  }]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/{{ temple.city.lower() }}">{{ temple.city }}</a></li>
+            <li class="breadcrumb-item"><a href="/{{ temple.city.lower() }}/temples">Temples</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ temple.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row mt-4">
+        <div class="col-lg-8">
+            <h1 class="mb-3">{{ temple.name }}</h1>
+            
+            {% if temple.image %}
+            <img src="{{ temple.image }}" alt="{{ temple.name }}" class="img-fluid rounded mb-4 w-100 object-fit-cover" style="max-height: 400px;">
+            {% endif %}
+            
+            <div class="bg-light p-4 rounded mb-4">
+                <h4>Temple Timings</h4>
+                <p class="mb-0">
+                    {% if temple.opening_time and temple.closing_time %}
+                    <strong>Darshan:</strong> {{ temple.opening_time.strftime('%I:%M %p') }} to {{ temple.closing_time.strftime('%I:%M %p') }}
+                    {% else %}
+                    Timings not available. Please check locally.
+                    {% endif %}
+                </p>
+            </div>
+            
+            <div class="content">
+                <h2>About {{ temple.name }}</h2>
+                <p>{{ temple.description }}</p>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h5 class="card-title">Nearby Attractions</h5>
+                    <ul class="list-unstyled mt-3">
+                        <li><a href="/{{ temple.city.lower() }}/hotels">Hotels in {{ temple.city }}</a></li>
+                        <li><a href="/{{ temple.city.lower() }}/restaurants">Restaurants in {{ temple.city }}</a></li>
+                        <li><a href="/travel-guide">Travel Guides</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

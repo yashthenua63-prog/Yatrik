@@ -13,3 +13,15 @@ from .event import Event
 from .food_trail import FoodTrail, FoodTrailStop
 from .support import SupportTicket
 from .local_seller import LocalSeller
+from .collector import DiscoveredEntity, CollectorLog
+from .news import NewsArticle
+
+__all__ = [
+    "User", "Category", "Place", "SavedPlace",
+    "Hotel", "Restaurant",
+    "Temple", "TempleGallery", "Event", "FoodTrail", "FoodTrailStop",
+    "Ride", "FareRule", "Driver", "Trip", "TripItem",
+    "SupportTicket", "LocalSeller", "Review", "FoodCategory", "FoodItem",
+    "Document", "ClaimRequest",
+    "DiscoveredEntity", "CollectorLog", "NewsArticle"
+]

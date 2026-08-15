@@ -61,6 +61,9 @@ class Config:
     DEBUG = False
     TESTING = False
 
+    # Base URL for SEO and Sitemap
+    BASE_URL = os.environ.get("BASE_URL", "https://yatrik-rw1u.onrender.com")
+
 
 # ==========================================
 # DEVELOPMENT CONFIG

@@ -607,10 +607,13 @@ def temple_weather(id):
 )
 def robots_txt():
 
-    robots = """User-agent: *
+    base_url = current_app.config.get('BASE_URL', 'https://yatrik-rw1u.onrender.com')
+    robots = f"""User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /auth
 
-Sitemap: https://yatrik-rw1u.onrender.com/sitemap.xml
+Sitemap: {base_url}/sitemap.xml
 """
 
 
@@ -632,9 +635,7 @@ def sitemap():
     temples = Temple.query.all()
 
 
-    base_url = (
-        "https://yatrik-rw1u.onrender.com"
-    )
+    base_url = current_app.config.get('BASE_URL', 'https://yatrik-rw1u.onrender.com')
 
 
     urls = []
@@ -675,11 +676,18 @@ def sitemap():
     # ======================================================
 
     for temple in temples:
+        if temple.verification_status != 'PUBLISHED':
+            continue
+            
+        if temple.slug and temple.city:
+            loc = f"{base_url}/{temple.city.lower()}/temples/{temple.slug}"
+        else:
+            loc = f"{base_url}/temples/{temple.id}"
 
         urls.append(
             f"""
             <url>
-                <loc>{base_url}/temples/{temple.id}</loc>
+                <loc>{loc}</loc>
                 <changefreq>weekly</changefreq>
                 <priority>0.8</priority>
             </url>
@@ -746,14 +754,45 @@ def sitemap():
             """
         )
 
+    # ======================================================
+    # SEO HUBS
+    # ======================================================
+    hubs = ['/mathura', '/vrindavan', '/braj', '/mathura/temples', '/vrindavan/temples']
+    for hub in hubs:
+        urls.append(
+            f"""
+            <url>
+                <loc>{base_url}{hub}</loc>
+                <changefreq>weekly</changefreq>
+                <priority>0.9</priority>
+            </url>
+            """
+        )
+
+    # ======================================================
+    # NEWS ARTICLES
+    # ======================================================
+    from app.models.news import NewsArticle
+    news_articles = NewsArticle.query.filter_by(status='PUBLISHED').all()
+    for article in news_articles:
+        urls.append(
+            f"""
+            <url>
+                <loc>{base_url}/news/{article.slug}/</loc>
+                <changefreq>daily</changefreq>
+                <priority>0.8</priority>
+            </url>
+            """
+        )
+
     sitemap_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 
 <urlset
-    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
->
-
-{''.join(urls)}
-
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+{"".join(urls)}
 </urlset>
 """
 

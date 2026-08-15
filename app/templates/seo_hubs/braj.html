@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Braj Circuit</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">Braj Tourism Guide 2026</h1>
+    <p class="lead">Explore the divine land of Braj covering Mathura, Vrindavan, Govardhan, Barsana, Nandgaon, and Radha Kund.</p>
+
+    <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+            <div class="card p-4 h-100 shadow-sm border-0 bg-light">
+                <h3>Mathura</h3>
+                <p>The birthplace of Lord Krishna.</p>
+                <a href="/mathura" class="btn btn-outline-primary mt-auto">Explore Mathura</a>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card p-4 h-100 shadow-sm border-0 bg-light">
+                <h3>Vrindavan</h3>
+                <p>Where Lord Krishna spent his youth.</p>
+                <a href="/vrindavan" class="btn btn-outline-primary mt-auto">Explore Vrindavan</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
