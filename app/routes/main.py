@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify, request, Response
+from flask import Blueprint, render_template, jsonify, request, Response, current_app
 from math import radians, sin, cos, sqrt, atan2
 
 from app.models import Temple, Place, Category, Hotel, Restaurant, FoodItem
@@ -610,8 +610,14 @@ def robots_txt():
     base_url = current_app.config.get('BASE_URL', 'https://yatrik-rw1u.onrender.com')
     robots = f"""User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /auth
+Disallow: /admin/
+Disallow: /profile/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /api/
+Disallow: /saved/
+Disallow: /planner/
+Disallow: /onboard/
 
 Sitemap: {base_url}/sitemap.xml
 """
